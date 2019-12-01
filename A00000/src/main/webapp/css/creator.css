@@ -1,0 +1,24 @@
+#left{
+    float: left;
+    width: 45%;
+    margin-left: 3%;
+}
+#right{
+    float: right;
+    width: 45%;
+    margin-right: 3%;
+}
+#write{
+    height: 1000px;
+    background-color: white;
+    width: 100%;
+}
+#show{
+    height: 1000px;
+    background-color: white;
+}
+.tips{
+    text-align: center;
+    font-style: italic;
+    font-size: 20px;
+}

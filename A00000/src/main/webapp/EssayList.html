@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>随笔列表</title>
+        <script src="js/jquery-3.4.1.js" type="text/javascript" charset="UTF-8"></script>
+        <script src="js/showdown.min.js" type="text/javascript" charset="UTF-8"></script>
+        <link href="css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="js/main.js" type="text/javascript" charset="UTF-8"></script>
+        <link href="css/main.css" rel="stylesheet" charset="UTF-8"/>
+    </head>
+    <body>
+        <div id="header">
+            <div><p style="font-size: 30px; font-style: italic; color: orangered;  padding-left: 100px">作者: A00000</p></div>
+            <div style="text-align: right; font-size: 25px; padding-right: 100px">形而上学, 不行放学.</div>
+        </div>
+        <div>
+            <div id="left">
+                <p style="font-size: 50px; font-style: italic;">随笔列表</p>
+                <ul id="titleList"></ul>
+            </div>
+            <div id="right">
+                <div>
+                    <div id="title"></div>
+                    <div id="edit">
+                        <a id="update" href="javascript:void(0)">更新</a><br/>
+                        <a id="delete" href="javascript:void(0)">删除</a>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div id="createMessage">
+                    <div id="creator"></div>
+                    <div id="createTime"></div>
+                </div>
+                <div style="clear: both"></div>
+                <div id="content"></div>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <div id="footer"></div>
+    </body>
+</html>

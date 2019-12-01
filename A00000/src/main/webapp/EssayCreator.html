@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>创建一篇新随笔</title>
+        <script src="js/jquery-3.4.1.js" type="text/javascript" charset="UTF-8"></script>
+        <script src="js/showdown.min.js" type="text/javascript" charset="UTF-8"></script>
+        <link href="css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/creator.css" rel="stylesheet" charset="UTF-8"/>
+        <script src="js/creator.js" type="text/javascript" charset="UTF-8"></script>
+    </head>
+    <body style="background-color: gray">
+        <input type="hidden" id="id" value=""/>
+        <div>
+            <div>
+                <div style="float: left">
+                    <table>
+                        <tr>
+                            <td>标题:</td>
+                            <td><input type="text" id="title"/></td>
+                            <td>令牌Key:</td>
+                            <td><input type="text" id="key"/></td>
+                            <td><input type="checkbox" id="isPassword" />是否设置密码</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>创作者:</td>
+                            <td><input type="text" id="creator" value="A00000"/></td>
+                            <td>令牌Value:</td>
+                            <td><input type="password" id="value"/></td>
+                            <td>密码: <input type="password" id="password" disabled="disabled"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="float: left; margin-left: 20px; margin-top: 2px">
+                    <button id="submit" style="width: 100px; text-align: center;">提交</button><br/>
+                    <button id="reset" style="width: 100px; text-align: center;">清空</button>
+                </div>
+                <div style="clear: both"></div>
+            </div>
+            <div id="left">
+                <div class="tips">
+                    <p>创作内容(支持MarkDown)</p>
+                </div>
+                <textarea id="write"></textarea>
+            </div>
+            <div id="right">
+                <div class="tips">
+                    <p>预览效果</p>
+                </div>
+                <div id="show"></div>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+    </body>
+</html>
