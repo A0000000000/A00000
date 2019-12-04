@@ -5,6 +5,7 @@ import com.a00000.mapper.EssayMapper;
 import com.a00000.service.EssayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ public class EssayServiceImpl implements EssayService {
 
 
     @Override
+    @Transactional
     public List<Essay> queryAllEssay() {
         List<Essay> res = null;
         try {
@@ -29,6 +31,7 @@ public class EssayServiceImpl implements EssayService {
     }
 
     @Override
+    @Transactional
     public Essay queryEssayById(String id) {
         Essay essay = null;
         try {
@@ -40,6 +43,7 @@ public class EssayServiceImpl implements EssayService {
     }
 
     @Override
+    @Transactional
     public boolean deleteEssayById(String id) {
         try {
             essayMapper.deleteEssayById(id);
@@ -51,6 +55,7 @@ public class EssayServiceImpl implements EssayService {
     }
 
     @Override
+    @Transactional
     public boolean addEssay(Essay essay) {
         essay.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         essay.setCreateTime(new Date());
@@ -64,6 +69,7 @@ public class EssayServiceImpl implements EssayService {
     }
 
     @Override
+    @Transactional
     public boolean editEssay(Essay essay) {
         try {
             Essay target = essayMapper.selectEssayById(essay.getId());

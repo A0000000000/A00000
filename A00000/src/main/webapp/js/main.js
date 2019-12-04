@@ -67,13 +67,11 @@ $(function () {
             alert("error!");
         }
     });
-
     $("#update").click(function (event) {
         var id = $("#edit").val();
         var password = $("#edit").attr("pwd");
         $(this).attr("href", "EssayCreator.html?id=" + id + "&password=" + password);
     });
-
     $("#delete").click(function (event) {
         var key = prompt("请输入令牌key");
         var value = prompt("请输入令牌value");
@@ -103,5 +101,36 @@ $(function () {
         }
         event.preventDefault();
     });
-
+    $("#submit").click(function () {
+        var username = $("#username").val();
+        var qqid = $("#qqid").val();
+        var wechatid = $("#wechatid").val();
+        var email = $("#email").val();
+        var telephone = $("#telephone").val();
+        if (username == "") {
+            alert("称呼不能为空哦!");
+            return;
+        }
+        if (qqid == "" && wechatid == "" && email == "" && telephone == "") {
+            alert("请至少留下一项联系方式!");
+            return;
+        }
+        $.ajax({
+            url : "/A00000/addNewFriend.action",
+            data : {"username": username, "qqid" : qqid, "wechatid" : wechatid, "email" : email, "telephone" : telephone},
+            type : "POST",
+            dataType : "JSON",
+            success : function (data, status, obj) {
+                if (data["status"] == "success") {
+                    alert("提交成功!");
+                    location.reload();
+                } else {
+                    alert(data["message"]);
+                }
+            },
+            error : function (data, status, obj) {
+                alert("error!");
+            }
+        });
+    });
 });

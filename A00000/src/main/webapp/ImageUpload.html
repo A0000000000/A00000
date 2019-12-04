@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>图片上传</title>
+        <script src="js/jquery-3.4.1.js" type="text/javascript" charset="UTF-8"></script>
+        <link href="css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
+        <script src="js/upload.js" type="text/javascript" charset="UTF-8"></script>
+        <link href="css/upload.css" rel="stylesheet" charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body style="background-color: gray;">
+        <div id="upload" class="container">
+            <h1 style="text-align: center;">图片上传区</h1>
+            <form id="ImageForm" method="POST" enctype="multipart/form-data" action="/A00000/imageUpload.action">
+                <table class="table table-condensed">
+                    <tr>
+                        <td>选择要上传的文件</td>
+                        <td><input type="file" multiple="true" name="images" /></td>
+                        <td><p>请输入令牌Key</p></td>
+                        <td><input type="text" name="key"/></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="isPassword" />是否设置密码</td>
+                        <td>密码: <input type="password" id="password" disabled="disabled"/></td>
+                        <td><p>请输入令牌Value</p></td>
+                        <td><input type="password" name="value"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="reset" value="重置"/></td>
+                        <td><input type="button" id="submit" value="提交"/></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="show" class="container">
+            <h1 style="text-align: center;">图片浏览区</h1>
+            <div>
+                <div id="list">
+                    <ul>
+                    </ul>
+                </div>
+                <div id="image" style="display: none">
+                    <div>图片名称:<p id="filename"></p> </div>
+                    <div>图片路径:<p id="path"></p></div>
+                    <div>上传时间:<p id="uploadTime"></p></div>
+                    <img id="imageShow" src="#"/>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </body>
+</html>

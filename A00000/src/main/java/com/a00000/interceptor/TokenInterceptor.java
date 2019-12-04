@@ -13,7 +13,6 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String url = request.getRequestURI();
-        System.out.println("url = [" + url + "]");
         if (URLUtils.isInterceptor(url)) {
             String key = request.getParameter("key");
             String value = request.getParameter("value");

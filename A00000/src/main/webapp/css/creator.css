@@ -12,10 +12,12 @@
     height: 1000px;
     background-color: white;
     width: 100%;
+    overflow:auto;
 }
 #show{
     height: 1000px;
     background-color: white;
+    overflow:auto;
 }
 .tips{
     text-align: center;
