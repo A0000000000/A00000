@@ -1,7 +1,7 @@
 $(function () {
     $.ajax({
         "url": "/A00000/getAllEssayList.action",
-        "type": "POST",
+        "type": "GET",
         "data": {},
         "dataType": "JSON",
         "success": function (data, status, obj) {
