@@ -1,0 +1,53 @@
+body {
+    background-size:cover;
+    background-image: url(/public/image/bh3.jpg);
+    background-repeat:no-repeat;
+}
+
+#main {
+    margin-top: 30px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#title {
+    text-align: center;
+    font-size: xx-large;
+    color: red;
+}
+
+.title {
+    text-align: center;
+    font-size: x-large;
+    font-style: italic;
+    color: #66CCFF;
+    margin-bottom: 50px;
+}
+
+.form_container {
+    width: 45%;
+    float: left;
+    margin: 2%;
+    background-color:rgba(128, 128, 128, 0.5);
+    min-height: 800px;
+}
+
+.clean {
+    clear: both;
+}
+
+.form_controls {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.btnArea {
+    align-items: center; 
+    text-align: center;
+    margin-top: 5%;
+}
+
+label {
+    color: green;
+    font-style: italic;
+}

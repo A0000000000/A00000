@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/node_modules/jquery/dist/jquery.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
+    <link href="/public/css/alltypes_main.css" rel="stylesheet" charset="UTF-8"/>
+    <script src="/public/js/alltypes_main.js" type="text/javascript" charset="UTF-8"></script>
+    <title>所有随笔类型</title>
+</head>
+<body>
+    <div class="modal fade" id="Token" tabindex="-1" role="dialog" aria-labelledby="Token">  
+        <div class="modal-dialog" role="document">  
+            <div class="modal-content">  
+                <div class="modal-header">  
+                    <h4 class="modal-title">请输入Key和Value</h4>  
+                </div>  
+                <div class="modal-body">
+                    <input type="hidden" id="id" />
+                    <input type="text" class="form-control" id="key" name="key" placeholder="请输入TokenKey">
+                    <input type="password" class="form-control" id="value" name="value" placeholder="请输入TokenValue">
+                </div>  
+                <div class="modal-footer">
+                    <button type="button" onclick="SureDeleteType()" class="btn btn-primary">确认</button>  
+                </div> 
+            </div>  
+        </div>  
+    </div>
+    
+    <div id="main">
+        <div id="title"><p>所有随笔类型</p></div>
+        <div class="container">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">名称</th>
+                    <th scope="col">备注</th>
+                    <th scope="col">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {{ each types }}
+                    <tr>
+                        <th scope="row">{{ $value.id }}</th>
+                        <td>{{ $value.name }}</td>
+                        <td>{{ $value.message }}</td>
+                        {{ if $value.id !== '0' }}
+                        <td><button type="button" onclick="deleteType('{{ $value.id }}')" class="btn btn-primary">删除</button></td>
+                        {{ /if }}
+                    </tr>
+                    {{ /each }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

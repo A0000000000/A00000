@@ -1,0 +1,84 @@
+body {
+    background-size:cover;
+    background-image: url(/public/image/bq.jpg);
+    background-repeat:no-repeat;
+}
+
+#main_container {
+    margin-top: 5%;
+    background-color:rgba(128, 128, 128, 0.5);
+    min-height: 850px;
+    overflow: auto;
+    position: relative;
+}
+
+#title {
+    text-align: center;
+    font-size: xx-large;
+    font-style: italic;
+    color: #66CCFF;
+    float: left;
+    width: 85%;
+}
+
+#update {
+    text-align: center;
+    width: 15%;
+    float: right;
+}
+
+#update button {
+    margin: 2%;
+}
+
+#addMsg {
+    font-size: large;
+    color: #66FFCC;
+}
+
+#type {
+    padding-left: 10%;
+    text-align: left;
+    float: left;
+}
+
+#author {
+    padding-right: 10%;
+    text-align: right;
+    float: right;
+}
+
+#time {
+    font-style: italic;
+    color: indigo;
+    font-size: larger;
+}
+
+#createTime {
+    text-align: left;
+    float: left;
+}
+
+#updateTime {
+    text-align: right;
+    float: right;
+}
+
+.clean {
+    clear: both;
+}
+
+#content {
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#comment {
+    text-align: center;
+    font-size: large;
+    font-style: italic;
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+}

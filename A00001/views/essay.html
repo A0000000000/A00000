@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- 导入jq, bs库 -->
+    <script src="/node_modules/jquery/dist/jquery.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
+    <script src="/public/js/essay_main.js" type="text/javascript" charset="UTF-8"></script>
+    <link href="/public/css/essay_main.css" rel="stylesheet" charset="UTF-8"/>
+    <title>随笔页面</title>
+</head>
+<body>
+    <!-- 删除时, 需要输入信息的对话框 -->
+    <div class="modal fade" id="Token" tabindex="-1" role="dialog" aria-labelledby="Token">  
+        <div class="modal-dialog" role="document">  
+            <div class="modal-content">  
+                <div class="modal-header">  
+                    <h4 class="modal-title">请输入Key和Value</h4>  
+                </div>  
+                <div class="modal-body">
+                    <input type="hidden" id="id1" value="{{ essay.id }}" />
+                    <input type="text" class="form-control" id="key" name="key" placeholder="请输入TokenKey">
+                    <input type="password" class="form-control" id="value" name="value" placeholder="请输入TokenValue">
+                </div>  
+                <div class="modal-footer">
+                    <button type="button" onclick="SureDelete(true)" class="btn btn-primary">确认</button>  
+                </div> 
+            </div>  
+        </div>  
+    </div>
+    <!-- 更新时, 需要输入信息的对话框 -->
+    <div class="modal fade" id="Password" tabindex="-1" role="dialog" aria-labelledby="Password">  
+        <div class="modal-dialog" role="document">  
+            <div class="modal-content">  
+                <div class="modal-header">  
+                    <h4 class="modal-title">请输入该随笔的密码</h4>  
+                </div>  
+                <div class="modal-body">
+                    <input type="hidden" id="id2" value="{{ essay.id }}" />
+                    <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+                </div>  
+                <div class="modal-footer">
+                    <button type="button" onclick="SureUpdate(true)" class="btn btn-primary">确认</button>  
+                </div> 
+            </div>  
+        </div>  
+    </div>
+    <!-- 显示信息的主容器 -->
+    <div class="container">
+        <div id="main_container">
+            <div>
+                <div id="title">
+                    <p>{{ essay.title }}</p>
+                </div>
+                <div id="update">
+                    <div><button type="button" class="btn btn-primary" onclick="updateEssay({{ essay.password }})">更新</button></div>
+                    <div><button type="button" class="btn btn-primary" onclick="deleteEssay()">删除</button></div>
+                </div>
+                <div class="clean"></div>
+            </div>
+            <div id="addMsg">
+                <div id="type">
+                    <p>随笔类型: {{ type.name }}</p>
+                </div>
+                <div id="author">
+                    <p>作者: {{ essay.creator }}</p>
+                </div>
+                <div class="clean"></div>
+            </div>
+            <div id="time">
+                <div id="createTime">创建时间: {{ essay.createTime }}</div>
+                <div id="updateTime">最后更新时间: {{ essay.updateTime }}</div>
+                <div class="clean"></div>
+            </div>
+            <div id="content">{{ essay.content }}</div>
+            <div id="comment"><a href="/comments?id={{ essay.id }}">查看评论</a></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+.essay {
+    width: 15%;
+    height: 300px;
+    background-color: rgba(102, 204, 255, 0.5);
+    padding: 1%;
+    margin: 1%;
+    float: left;
+    text-align: center;
+    align-items: center;
+}
+
+.clean {
+    clear: both;
+}
+
+.center {
+    padding-top: 2%;
+    margin-left: 5%;
+    margin-right: 0%;
+    align-items: center;
+}
+
+.pwd {
+    color: red;
+}
+
+.word {
+    font-size: medium;
+    font-style: italic;
+}
+
+body {
+    background-size:cover;
+    background-image: url(/public/image/tong.jpg);
+    background-repeat:no-repeat;
+}
+
+#header {
+    width: 100%;
+    height: 160px;
+    font-size: xx-large;
+}
+
+#name {
+    margin-left: 10%;
+    text-align: left;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+#welcome {
+    text-align: right;
+    margin-right: 10%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+#page {
+    text-align: center;
+    font-size: xx-large;
+    color: gray;
+}
+
+#cruPage {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+#footer {
+    width: 100%;
+    text-align: center;
+    font-size: xx-large;
+    color: #66FFCC;
+}
+
+#CreateEssay {
+    text-align: center;
+    font-style: italic;
+    font-size: medium;
+}

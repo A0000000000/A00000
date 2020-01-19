@@ -1,0 +1,54 @@
+body {
+    background-color: gray;
+    background-size:cover;
+    background-repeat:no-repeat;
+}
+
+#delete {
+    float: right;
+}
+
+#header {
+    margin-top: 50px;
+    text-align: center;
+    font-style: italic;
+    color: #66CCFF;
+}
+
+#main {
+    width: 100%;
+    overflow: auto;
+    min-height: 800px;
+    background-color: rgba(102, 204, 255, 0.5);
+}
+
+.list {
+    float: left;
+    width: 40%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+button {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.clean {
+    clear: both;
+}
+
+#msgTitle {
+    text-align: center;
+    font-size: larger;
+    color: hotpink;
+}
+
+.msgContent {
+    width: 50%;
+    text-align: center;
+    float: left;
+}
