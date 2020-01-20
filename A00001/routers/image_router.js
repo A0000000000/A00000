@@ -42,7 +42,6 @@ function deleteFiles(files) {
     files.forEach(function(item, index) {
        fs.unlink(item.path, function(err) {
           if (err) {
-             console.log(err);
           }
        });
     });
@@ -85,7 +84,6 @@ router.post('/addImages', function(req, resp) {
    params.images = JSON.stringify(filesdata);
    httputils.post(host, getURL('saveImages'), port, params, function(err, data) {
       if (err) {
-         console.log(err);
          resp.json({
             status: 'failed',
             message: 'Server Error !'
@@ -176,7 +174,6 @@ router.post('/deleteImageById', function(req, resp) {
          if (data.status === 'success') {
             fs.unlink(deletePath, function(err) {
                if (err) {
-                  console.log(err);
                }
             });
          }

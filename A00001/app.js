@@ -8,6 +8,15 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 // 导入path库
 var path = require('path');
+// 导入fs库
+var fs = require('fs');
+
+fs.exists(path.join(__dirname, 'upload/'), function(exists) {
+   if (!exists) {
+       fs.mkdir(path.join(__dirname, 'upload/'), function(err) {
+       });
+   }
+});
 
 // 开发node_modules, upload和public文件夹
 app.use('/node_modules/', express.static(path.join(__dirname, 'node_modules/')));
@@ -45,7 +54,7 @@ app.use(require('./routers/friend_router'));
 app.use(require('./routers/comment_router'));
 
 // 开启监听服务
-app.listen(3000, function() {
-    console.log('app is running on port 3000.');
+app.listen(80, function() {
+    console.log('app is running on port 80.');
 });
 

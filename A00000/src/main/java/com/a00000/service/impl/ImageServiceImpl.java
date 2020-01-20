@@ -35,7 +35,6 @@ public class ImageServiceImpl implements ImageService {
                         count++;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -49,7 +48,6 @@ public class ImageServiceImpl implements ImageService {
         try {
             list = imageMapper.selectAllImages();
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return list;
     }
@@ -61,7 +59,6 @@ public class ImageServiceImpl implements ImageService {
         try {
             image = imageMapper.selectImageById(id);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return image;
     }
@@ -75,7 +72,6 @@ public class ImageServiceImpl implements ImageService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

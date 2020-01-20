@@ -51,7 +51,6 @@ router.get('/essay', function(req, resp) {
    httputils.post(host, getURL('isHavePassword'), port, { id: id }, function(err, data) {
       if (err) {
          resp.status(500).send('Server Error !');
-         console.log(err);
          return;
       }
       if (data.status === 'failed') {
@@ -65,7 +64,6 @@ router.get('/essay', function(req, resp) {
             httputils.post(host, getURL('getEssayById'), port, { id: id , password: '' }, function(err, essay) {
                if (err) {
                   resp.status(500).send('Server Error !');
-                  console.log(err);
                   return;
                }
                if (essay.status === 'failed') {
@@ -228,7 +226,6 @@ router.get('/update', function(req, resp) {
    }
    httputils.post(host, getURL('getEssayById'), port, params, function(err, data) {
       if (err) {
-         console.log(err);
          resp.status(500).send('Server Error !');
          return;
       }
@@ -242,7 +239,6 @@ router.get('/update', function(req, resp) {
       }
       httputils.post(host, getURL('getAllType'), port, null, function(err, types) {
          if (err) {
-            console.log(err);
             resp.status(500).send('Server Error !');
             return;
          }
@@ -284,7 +280,6 @@ router.post('/updateEssay', function(req, resp) {
    }
    httputils.post(host, getURL('updateEssay'), port, params, function(err, data) {
       if (err) {
-         console.log(err);
          resp.json({status: 'failed', message: 'Server Error !'});
          return;
       }

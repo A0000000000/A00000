@@ -28,7 +28,6 @@ public class TypeServiceImpl implements TypeService {
         try {
             type = typeMapper.selectTypeById(id);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return type;
     }
@@ -40,7 +39,6 @@ public class TypeServiceImpl implements TypeService {
         try {
             res = typeMapper.selectAllType();
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return res;
     }
@@ -54,7 +52,6 @@ public class TypeServiceImpl implements TypeService {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         type.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         try {
@@ -65,7 +62,6 @@ public class TypeServiceImpl implements TypeService {
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -76,7 +72,6 @@ public class TypeServiceImpl implements TypeService {
         try {
             essayMapper.updateEssayByType(id, "0");
         } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             int count = typeMapper.deleteTypeById(id);
@@ -84,7 +79,6 @@ public class TypeServiceImpl implements TypeService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

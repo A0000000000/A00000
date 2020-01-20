@@ -24,7 +24,6 @@ public class CommentServiceImpl implements CommentService {
         try {
             list = commentMapper.selectCommentsByEssayId(essayId);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return list;
     }
@@ -40,7 +39,6 @@ public class CommentServiceImpl implements CommentService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }
@@ -54,7 +52,6 @@ public class CommentServiceImpl implements CommentService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

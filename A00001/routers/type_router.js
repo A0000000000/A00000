@@ -51,7 +51,6 @@ router.post('/addType', function(req, resp) {
                 status: 'failed',
                 message: 'Server Error !'
             });
-            console.log(err);
             return;
         } else {
             resp.json(data);

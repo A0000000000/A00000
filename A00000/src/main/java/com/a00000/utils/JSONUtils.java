@@ -20,14 +20,12 @@ public class JSONUtils {
         try {
             return parserArray(jsonData);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             List<Image> images = new ArrayList<>();
             images.add(parserObject(jsonData));
             return images;
         } catch (Exception e) {
-          e.printStackTrace();
         }
         return null;
     }

@@ -29,4 +29,7 @@ public class TokenUtils {
         return bundle.getString("value");
     }
 
+    public static String getTOKEN() {
+        return bundle.getString("TOKEN");
+    }
 }

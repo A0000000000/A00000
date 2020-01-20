@@ -27,7 +27,6 @@ public class FriendServiceImpl implements FriendService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

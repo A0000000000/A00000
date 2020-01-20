@@ -42,7 +42,6 @@ var isValid = function(str) {
 router.get('/', function(req, resp) {
    httputils.post(host, getURL('getAllEssayTitle'), port, { page: 1}, function(err, data) {
       if (err) {
-         console.log(err);
          resp.status(500).send('Server Error !');
       } else {
          var count = parseInt(fs.readFileSync(path.join(__dirname, '../count.data'), 'utf8'));
@@ -58,7 +57,6 @@ router.get('/', function(req, resp) {
          });
          fs.writeFile(path.join(__dirname, '../count.data'), count, function(err) {
             if (err) {
-               console.log(err);
             }
          });
       }
@@ -73,7 +71,6 @@ router.get('/essaylist', function(req, resp) {
    }
    httputils.post(host, getURL('getAllEssayTitle'), port, { page: cru}, function(err, data) {
       if (err) {
-         console.log(err);
          resp.status(500).send('Server Error !');
       } else {
          if (data.length <= 0) {
@@ -92,7 +89,6 @@ router.get('/essaylist', function(req, resp) {
          });
          fs.writeFile('./count.data', count, function(err) {
             if (err) {
-               console.log(err);
             }
          });
       }

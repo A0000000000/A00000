@@ -11,6 +11,10 @@
             <mvc:mapping path="/**"/>
             <bean class="com.a00000.interceptor.TokenInterceptor"></bean>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.a00000.interceptor.PermissionInterceptor"></bean>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <context:component-scan base-package="com.a00000.handler">

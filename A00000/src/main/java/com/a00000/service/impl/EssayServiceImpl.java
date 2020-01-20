@@ -30,7 +30,6 @@ public class EssayServiceImpl implements EssayService {
         try {
             essays = essayMapper.selectEssay(begin, 10);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return essays;
     }
@@ -42,7 +41,6 @@ public class EssayServiceImpl implements EssayService {
         try {
             essay = essayMapper.selectEssayById(id);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return essay;
     }
@@ -54,7 +52,6 @@ public class EssayServiceImpl implements EssayService {
         try {
             commentMapper.deleteAssetEssay(id);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         try {
             int count = essayMapper.deleteEssayById(id);
@@ -62,7 +59,6 @@ public class EssayServiceImpl implements EssayService {
                 res = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return res;
     }
@@ -83,7 +79,6 @@ public class EssayServiceImpl implements EssayService {
                 res = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return res;
     }
@@ -95,7 +90,6 @@ public class EssayServiceImpl implements EssayService {
         try {
             target = essayMapper.selectEssayById(essay.getId());
         } catch (Exception e) {
-            e.printStackTrace();
         }
         if(target == null) {
             return false;
@@ -116,7 +110,6 @@ public class EssayServiceImpl implements EssayService {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }

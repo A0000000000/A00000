@@ -2,7 +2,7 @@
 var http = require('http');
 // 导入querystring库
 var querystring = require('querystring');
-
+var static_data = require('./static_data');
 // 判断一个字符串是否可以转换为json
 function isJson(str) {
     try {
@@ -15,13 +15,9 @@ function isJson(str) {
 }
 
 // 封装的get请求
-function get(host, path, port, params, callback, isParse = true) {
-    var content = '';
-    if(isParse) {
-        content = querystring.stringify(params);
-    } else {
-        content = params;
-    }
+function get(host, path, port, params, callback) {
+    params.TOKEN = static_data.TOKEN;
+    var content = querystring.stringify(params);
     var options = {
         host: host,
         port: port,
@@ -46,13 +42,9 @@ function get(host, path, port, params, callback, isParse = true) {
 }
 
 // 封装的post请求
-function post(host, path, port, params, callback, isParse = true) {
-    var content = '';
-    if(isParse) {
-        content = querystring.stringify(params);
-    } else {
-        content = params;
-    }
+function post(host, path, port, params, callback) {
+    params.TOKEN = static_data.TOKEN;
+    var content = querystring.stringify(params);
     var options = {
         host: host,
         port: port,
