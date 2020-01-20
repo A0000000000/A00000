@@ -16,6 +16,9 @@ function isJson(str) {
 
 // 封装的get请求
 function get(host, path, port, params, callback) {
+    if (!params) {
+        params = {}
+    }
     params.TOKEN = static_data.TOKEN;
     var content = querystring.stringify(params);
     var options = {
@@ -43,6 +46,9 @@ function get(host, path, port, params, callback) {
 
 // 封装的post请求
 function post(host, path, port, params, callback) {
+    if (!params) {
+        params = {}
+    }
     params.TOKEN = static_data.TOKEN;
     var content = querystring.stringify(params);
     var options = {
