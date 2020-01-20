@@ -9,11 +9,11 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.a00000.interceptor.TokenInterceptor"></bean>
+            <bean class="com.a00000.interceptor.PermissionInterceptor"></bean>
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="com.a00000.interceptor.PermissionInterceptor"></bean>
+            <bean class="com.a00000.interceptor.TokenInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
 
