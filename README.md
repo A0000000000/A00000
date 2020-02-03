@@ -16,6 +16,8 @@
 5. 后端
     * 后端使用JavaWeb
     * 后端框架为SpringMVC, Spring, MyBatis
+    * Service层使用Redis做缓存
+    * Dao层使用EhCache做二级缓存
 6. 数据库
     * 数据库使用MySQL
     * 数据表维护了5张
