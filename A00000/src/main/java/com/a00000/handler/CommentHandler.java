@@ -3,6 +3,7 @@ package com.a00000.handler;
 import com.a00000.bean.Comment;
 import com.a00000.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,9 @@ public class CommentHandler {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 处理获取某篇随笔的评论

@@ -9,6 +9,7 @@ import java.util.List;
  * 用于处理与t_type表增删改查的Mapper接口
  */
 @Mapper
+@CacheNamespace(implementation = org.mybatis.caches.ehcache.EhcacheCache.class)
 public interface TypeMapper {
 
     /**

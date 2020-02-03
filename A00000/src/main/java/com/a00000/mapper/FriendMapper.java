@@ -1,6 +1,7 @@
 package com.a00000.mapper;
 
 import com.a00000.bean.Friend;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 对t_friend表进行增删改查的Mapper接口
  */
 @Mapper
+@CacheNamespace(implementation = org.mybatis.caches.ehcache.EhcacheCache.class)
 public interface FriendMapper {
 
     /**

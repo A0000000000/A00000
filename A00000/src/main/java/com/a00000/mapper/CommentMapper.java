@@ -9,6 +9,7 @@ import java.util.List;
  * 处理与t_comment表相关的Mapper接口
  */
 @Mapper
+@CacheNamespace(implementation = org.mybatis.caches.ehcache.EhcacheCache.class)
 public interface CommentMapper {
 
     /**

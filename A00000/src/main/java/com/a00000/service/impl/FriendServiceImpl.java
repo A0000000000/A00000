@@ -4,6 +4,7 @@ import com.a00000.bean.Friend;
 import com.a00000.mapper.FriendMapper;
 import com.a00000.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Autowired
     private FriendMapper friendMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     @Transactional

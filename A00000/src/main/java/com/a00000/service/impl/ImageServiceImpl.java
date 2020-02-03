@@ -4,19 +4,22 @@ import com.a00000.bean.Image;
 import com.a00000.mapper.ImageMapper;
 import com.a00000.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ImageServiceImpl implements ImageService {
 
     @Autowired
     private ImageMapper imageMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     @Transactional
@@ -45,8 +48,17 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public List<Image> getAllImages() {
         List<Image> list = null;
+        ValueOperations vps = redisTemplate.opsForValue();
+        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
+        if (cache == null) {
+            cache = new HashMap<>();
+        }
         try {
             list = imageMapper.selectAllImages();
+            for (Image image : list) {
+                cache.put(image.getId(), image);
+            }
+            vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
         }
         return list;
@@ -56,8 +68,17 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public Image getImageById(String id) {
         Image image = null;
+        ValueOperations vps = redisTemplate.opsForValue();
+        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
+        if (cache == null) {
+            cache = new HashMap<>();
+        }
         try {
-            image = imageMapper.selectImageById(id);
+            image = cache.get(id);
+            if (image == null) {
+                image = imageMapper.selectImageById(id);
+            }
+            vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
         }
         return image;
@@ -66,8 +87,15 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public boolean deleteImageById(String id) {
+        ValueOperations vps = redisTemplate.opsForValue();
+        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
+        if (cache == null) {
+            cache = new HashMap<>();
+        }
         try {
+            cache.remove(id);
             int count = imageMapper.deleteImageById(id);
+            vps.set(Image.class.getName(), cache);
             if (count > 0) {
                 return true;
             }

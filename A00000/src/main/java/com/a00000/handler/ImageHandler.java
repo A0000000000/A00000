@@ -4,6 +4,7 @@ import com.a00000.bean.Image;
 import com.a00000.service.ImageService;
 import com.a00000.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

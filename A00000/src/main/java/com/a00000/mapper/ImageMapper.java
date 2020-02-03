@@ -9,6 +9,7 @@ import java.util.List;
  * 处理与t_image表相关的增删改查的Mapper接口
  */
 @Mapper
+@CacheNamespace(implementation = org.mybatis.caches.ehcache.EhcacheCache.class)
 public interface ImageMapper {
 
     /**
