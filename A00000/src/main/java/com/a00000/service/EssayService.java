@@ -14,7 +14,7 @@ public interface EssayService {
      * @param page 获取第page页的随笔内容
      * @return 返回随笔的List集合
      */
-    List<Essay> getEssay(Integer page);
+    List<Essay> getEssay(Integer page, Integer size);
 
     /**
      * 通过id查询一篇随笔
@@ -44,4 +44,10 @@ public interface EssayService {
      */
     boolean updateEssay(Essay essay);
 
+    /**
+     * 从数据库获取随笔的数量并计算随笔的总页数
+     * @param size 每页的数量
+     * @return 随笔的页数
+     */
+    Integer getEssayPages(Integer size);
 }

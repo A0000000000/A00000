@@ -3,76 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="/node_modules/jquery/dist/jquery.js" type="text/javascript" charset="UTF-8"></script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.js" type="text/javascript" charset="UTF-8"></script>
-    <script src="/node_modules/showdown/dist/showdown.js" type="text/javascript" charset="UTF-8"></script>
-    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
-    <link href="/public/css/create_main.css" rel="stylesheet" charset="UTF-8"/>
-    <script src="/public/js/create_main.js" type="text/javascript" charset="UTF-8"></script>
     <title>创建一篇新随笔</title>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/vue/dist/vue.js"></script>
+    <script src="/node_modules/showdown/dist/showdown.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css"/>
+    <script src="/public/js/create.js"></script>
+    <link rel="stylesheet" href="/public/css/create.css"/>
 </head>
 <body>
-    <div id="main">
-        <div id="otherMsg">
-            <div id="title"><p>创建一篇新随笔</p></div>
-            <div id="form">
-                <table class="table">
-                    <tbody>
-                      <tr>
-                        <td>随笔标题: </td>
-                        <td><input type="text" id="essayTitle" placeholder="请输入随笔标题"/></td>
-                        <td>创建者: </td>
-                        <td><input type="text" id="essayCreator" placeholder="请输入作者" value="A00000"/></td>
-                      </tr>
-                      <tr>
-                        <td>令牌Key: </td>
-                        <td><input type="text" id="key" placeholder="请输入令牌Key"/></td>
-                        <td>令牌Value: </td>
-                        <td><input type="password" id="value" placeholder="请输入令牌Value"/></td>
-                      </tr>
-                      <tr>
-                        <td>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="isPassword"/>
-                                <label class="form-check-label" for="isPassword">是否需要密码</label>
-                            </div>
-                        </td>
-                        <td><input type="password" disabled="disabled" id="password" placeholder="请输入密码"/></td>
-                        <td>选择随笔类型: </td>
-                        <td>
-                            <select id="type">
-                                {{ each types }}
-                                <option id="{{ $value.id }}">{{ $value.name }}</option>
-                                {{ /each }}
-                            </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div id="app">
+        <div id="title"><p>创建一篇新随笔</p></div>
+        <div id="form">
+            <table class="table">
+                <tbody>
+                    <tr>
+                    <td>随笔标题: </td>
+                    <td><input type="text" v-model="title" placeholder="请输入随笔标题"/></td>
+                    <td>创建者: </td>
+                    <td><input type="text" v-model="creator" placeholder="请输入作者" value="A00000"/></td>
+                    </tr>
+                    <tr>
+                    <td>令牌Key: </td>
+                    <td><input type="text" v-model="key" placeholder="请输入令牌Key"/></td>
+                    <td>令牌Value: </td>
+                    <td><input type="password" v-model="value" placeholder="请输入令牌Value"/></td>
+                    </tr>
+                    <tr>
+                    <td>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" v-on:change="handleChangePwd($event)" id="isPassword" />
+                            <label class="form-check-label" for="isPassword">是否需要密码</label>
+                        </div>
+                    </td>
+                    <td><input type="password" v-bind:disabled="disabled" v-model="password" placeholder="请输入密码"/></td>
+                    <td>选择随笔类型: </td>
+                    <td>
+                        <select v-model="type">
+                            {{ each types }}
+                            <option value="{{ $value.id }}">{{ $value.name }}</option>
+                            {{ /each }}
+                        </select>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div id="upload">
-            <p><a href="/addition" target="_blank">上传图片/增加随笔类型</a></p>
-        </div>
-        <div id="main_container">
-            <div class="content">
-                <div class="tips"><h1>创作内容(支持MarkDown)</h1></div>
-                <textarea  id="write"></textarea>
+        <div id="upload"><a href="/addition" target="_blank">上传图片/增加随笔类型</a></div>
+        <div id="main">
+            <div class="content" id="write">
+                <h1 class="tips">创作内容(支持MarkDown)</h1>
+                <textarea id="writeContent" v-model="content"></textarea>
             </div>
-            <div class="content">
-                <div class="tips"><h1>预览效果 (<a href="/allImages" target="_blank">查看全部图片</a>)</h1></div>
-                <div id="show"></div>
+            <div class="content" id="show">
+                <h1 class="tips">预览效果(<a href="/images" target="_blank">查看全部图片</a>)</h1>
+                <div id="showContent" v-html="contentHtml"></div>
             </div>
-            <div class="clean"></div>
-        </div>
-        <div id="bottom">
-            <div class="btn_div"><button id="submit" class="btn btn-primary">提交</button></div>
-            <div class="btn_div"><button id="reset" class="btn btn-primary">清空</button></div>
             <div class="clean"></div>
         </div>
         <div id="footer">
-            <p>欢迎访问本页面</p>
+            <div class="btn_div"><button @click="submit" class="btn btn-primary">提交</button></div>
+            <div class="btn_div"><button @click="clean" class="btn btn-primary">清空</button></div>
+            <div class="clean"></div>
         </div>
     </div>
 </body>

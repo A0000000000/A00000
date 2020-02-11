@@ -4,7 +4,6 @@ import com.a00000.bean.Image;
 import com.a00000.service.ImageService;
 import com.a00000.utils.JSONUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,6 +96,7 @@ public class ImageHandler {
                 map.put("path", image.getPath());
                 map.put("uploadTime", format.format(image.getUploadTime().getTime()));
                 map.put("filename", image.getOriginalname());
+                map.put("password", StringUtils.isEmpty(image.getPassword()) ? "false" : "true");
             } else {
                 map.put("status", "failed");
                 map.put("message", "密码错误!");

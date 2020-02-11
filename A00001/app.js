@@ -18,7 +18,7 @@ fs.exists(path.join(__dirname, 'upload/'), function(exists) {
    }
 });
 
-// 开发node_modules, upload和public文件夹
+// 开放node_modules, upload和public文件夹
 app.use('/node_modules/', express.static(path.join(__dirname, 'node_modules/')));
 app.use('/public/', express.static(path.join(__dirname, 'public/')));
 app.use('/upload/', express.static(path.join(__dirname, 'upload/')));
@@ -47,14 +47,16 @@ app.use(bodyParser.json());
 
 // 使用自定义的路由
 app.use(require('./routers/index_router'));
-app.use(require('./routers/essay_router'));
-app.use(require('./routers/image_router'));
-app.use(require('./routers/type_router'));
-app.use(require('./routers/friend_router'));
-app.use(require('./routers/comment_router'));
+app.use(require('./routers/essaylist_router.js'));
+app.use(require('./routers/essay_router.js'));
+app.use(require('./routers/create_router.js'));
+app.use(require('./routers/update_router.js'));
+app.use(require('./routers/friend_router.js'));
+app.use(require('./routers/comment_router.js'));
+app.use(require('./routers/addition_router.js'));
 
 // 开启监听服务
-app.listen(80, function() {
-    console.log('app is running on port 80.');
+app.listen(3000, function() {
+    console.log('app is running on port 3000.');
 });
 

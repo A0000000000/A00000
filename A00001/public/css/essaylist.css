@@ -1,0 +1,71 @@
+body {
+    background-image: url(/public/images/bq.jpg);
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+#app {
+    background-color: #66CCFF50;
+    margin-top: 100px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin-bottom: 100px;
+}
+
+#app h1 {
+    text-align: center;
+    font-style: italic;
+}
+
+#app h6 {
+    padding-top: 40px;
+    text-align: right;
+    padding-bottom: 40px;
+}
+
+#essay_container {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.pwd {
+    color: red;
+}
+
+.nav-item {
+    font-size: xx-large;
+}
+
+#essay {
+    float: left;
+    width: 18%;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #66FFCC75;
+    height: 200px;
+    padding-top: 20px;
+    overflow: auto;
+}
+
+.clean {
+    clear: both;
+}
+
+#creator {
+    color: aqua;
+    font-style: italic;
+    font-size: larger;
+}
+
+.date {
+    color: purple;
+}
+
+#addition {
+    padding-top: 50px;
+    text-align: center;
+    font-style: italic;
+    font-size: x-large;
+}

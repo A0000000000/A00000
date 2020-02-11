@@ -1,291 +1,218 @@
 // 导入文件操作库
-var fs = require('fs');
+let fs = require('fs');
 // 导入path库
-var path = require('path');
+let path = require('path');
 // 导入自己封装http请求的工具
-var httputils = require(path.join(__dirname, '../utils/httputils'));
+let httputils = require(path.join(__dirname, '../utils/httputils'));
+// 导入操作Mongodb的库
+let EssayUtils = require(path.join(__dirname, '../utils/mongodb')).EssayUtils;
+let TypeUtils = require(path.join(__dirname, '../utils/mongodb')).TypeUtils;
+let CommentUtils = require(path.join(__dirname, '../utils/mongodb')).CommentUtils;
+
 // 导入静态数据
-var static_data = require(path.join(__dirname, '../utils/static_data'));
+let static_data = require(path.join(__dirname, '../utils/static_data'));
 // 导入express框架
-var express = require('express');
+let express = require('express');
 
 // 创建express路由
-var router = express.Router();
+let router = express.Router();
 
 // 导入showdown的库
-var showdown = require('showdown');
+let showdown = require('showdown');
 
 // 创建解析器
-var converter = new showdown.Converter();
+let converter = new showdown.Converter();
 
 // 请求主机地址
-var host = static_data.host;
+let host = static_data.host;
 
 // 请求主机的端口
-var port = static_data.port;
+let port = static_data.port;
 
 // 获取请求URL的地址
-var getURL = function(str) {
-    return static_data.before + str + static_data.after;
+let getURL = function(str) {
+   return static_data.before + str + static_data.after;
 }
 
 // 判断是否具有某个参数
-var isValid = function(str) {
+let isValid = function(str) {
    if (str === undefined || str === null || str === "") {
       return false;
    }
    return true;
 }
 
-
-// 处理/essay的get请求
-router.get('/essay', function(req, resp) {
-   var id = req.query.id;
-   if (!isValid(id)) {
-      resp.render('error.html', {
-         status: 'failed',
-         message: '请求参数有误!'
-      });
+router.get('/essay', function (req, resp) {
+   let params = req.query;
+   if (!isValid(params.id)) {
+      resp.send('参数有误!');
       return;
    }
-   httputils.post(host, getURL('isHavePassword'), port, { id: id }, function(err, data) {
-      if (err) {
-         resp.status(500).send('Server Error !');
-         return;
-      }
-      if (data.status === 'failed') {
-         resp.send(data.message);
-      } else {
-         if (data.message === 'true') {
-            resp.render('password.html', {
-               id: id
-            });
+   let p1 = new Promise(function(resolve, reject){
+      httputils.post(host, getURL('isHavePassword'), port, params, function(err, res) {
+         if (err) {
+            reject(err);
          } else {
-            httputils.post(host, getURL('getEssayById'), port, { id: id , password: '' }, function(err, essay) {
-               if (err) {
-                  resp.status(500).send('Server Error !');
-                  return;
-               }
-               if (essay.status === 'failed') {
-                  resp.send(essay.message);
-               } else {
-                  httputils.post(host, getURL('getTypeById'), port, { id: essay.typeid }, function(err, type) {
-                     if (err) {
-                        resp.status(500).send('Server Error !');
-                        return;
-                     }
-                     essay.content = converter.makeHtml(essay.content);
-                     resp.render('essay.html', {
-                        essay: essay,
-                        type: type
-                     });
-                  });
-               }
-            });
+            resolve(res);
          }
-      }
-   });
-});
- 
-// 处理/essay的post请求
-router.post('/essay', function(req, resp) {
-   var params = req.body;
-   if (!(isValid(params.id) && isValid(params.password))) {
-      resp.render('password.html', {
-         status: 'failed',
-         message: '请求参数有误!',
-         id: params.id
       });
-      return;
-   }
-   httputils.post(host, getURL('getEssayById'), port, params, function(err, data) {
-      if (err) {
-         resp.status(500).send('Server Error !');
-      } else {
-         if (data.status === 'failed') {
-            resp.send(data.message);
-         } else {
-            if (data.message === 'success') {
-               httputils.post(host, getURL('getTypeById'), port, {id: data.typeid}, function(err, type) {
-                  if (err) {
-                     resp.status(500).send('Server Error !');
-                     return;
-                  } else {
-                     data.content = converter.makeHtml(data.content);
-                     resp.render('essay.html', {essay: data, type: type});
-                  }
-               });
+   });
+   let p2 = p1.then(function(res) {
+      if (res) {
+         if (res.status === 'success') {
+            if (res.message === 'true') {
+               resp.render('password.html', {id: params.id});
             } else {
-               data.id = req.body.id;
-               resp.render('password.html', data);
+               return new Promise(function(resolve, reject) {
+                  EssayUtils.getEssayById(params, function(err, ret) {
+                     if (err || ret === null) {
+                        reject(err);
+                     } else {
+                        resolve(ret);
+                     }
+                  });
+               });
             }
+         } else {
+            resp.send(res.message);
          }
       }
+   }, function(err) {
+      resp.send('服务器出错!');
    });
-});
-
-// 处理/deleteEssay的post请求
-router.post('/deleteEssay', function(req, resp) {
-   var params = req.body;
-   if (!(isValid(params.id) && isValid(params.key) && isValid(params.value))) {
-      resp.json({
-         status: 'failed',
-         message: '请求参数有误!'
+   let p3 = p2.then(function(res) {
+      if (res) {
+         res.content = converter.makeHtml(res.content);
+         resp.render('essay.html', {essay: res});
+      }
+   }, function(err) {
+      return new Promise(function(resolve, reject) {
+         httputils.post(static_data.host, getURL('getEssayById'), static_data.port, params, function(err, res) {
+            if (err) {
+               reject(err);
+            } else {
+               resolve(res);
+            }
+         });
       });
+   });
+   p3.then(function(res){
+      if (res) {
+         if (res.password === 'false') {
+            EssayUtils.saveEssay(res, function(err, res) {});
+         }
+         res.content = converter.makeHtml(res.content);
+         resp.render('essay.html', {essay: res});
+      }
+   }, function(err) {
+      resp.send('服务器错误!');
+   });
+
+});
+
+router.post('/getTypeById', function(req, resp) {
+   let params = req.body;
+   if(!isValid(params.id)) {
+      resp.json({status: 'failed', message: '请求参数无效!'});
       return;
    }
-   httputils.post(host, getURL('deleteEssayById'), port, params, function(err, data) {
-      if (data.status === 'success') {
-         resp.json(data);
-      } else {
-         resp.json(data);
+   let p1 = new Promise(function(resolve, reject) {
+      TypeUtils.getTypeById(params, function(err, res) {
+         if (err || res === null) {
+            reject(err);
+         } else {
+            resolve(res);
+         }
+      });
+   });
+
+   let p2 = p1.then(function(res) {
+      if (res) {
+         resp.json(res);
       }
+   }, function(err) {
+      return new Promise(function(resolve, reject) {
+         httputils.post(host, getURL('getTypeById'), port, params, function(err, res) {
+            if (err) {
+               reject(err);
+            } else {
+               resolve(res);
+            }
+         });
+      });
+   });
+
+   p2.then(function(res) {
+      if(res) {
+         TypeUtils.saveType(res, function(err, res){});
+         resp.json(res);
+      }
+   }, function(err) {
+      resp.json({status: 'failed', message: '服务器错误!'});
+   })
+});
+
+router.post('/essay', function (req, resp) {
+   let params = req.body;
+   if (!(isValid(params.id) && isValid(params.password))) {
+      resp.render('password.html', {message: res.message, id: params.id});
+   }
+   let p1 = new Promise(function(resolve, reject) {
+      httputils.post(host, getURL('getEssayById'), port, params, function(err, res) {
+         if (err) {
+            reject(err);
+         } else {
+            resolve(res);
+         }
+      });
+   });
+   p1.then(function(res) {
+      if(res.status === 'failed') {
+         resp.render('password.html', {message: res.message, id: params.id});
+      } else {
+         if (res.message === 'success') {
+            res.content = converter.makeHtml(res.content);
+            resp.render('essay.html', {essay: res});
+         } else {
+            resp.render('password.html', {message: res.message, id: params.id});
+         }
+      }
+   }, function(err) {
+      resp.render('password.html', {
+         message: '服务器出错!'
+      });
    });
 });
 
-// 处理/createEssay的get请求
-router.get('/createEssay', function(req, resp) {
-   httputils.post(host, getURL('getAllType'), port, null, function(err, data) {
-      if (err) {
-         resp.status(500).send('Server Error !');
-      } else {
-         resp.render('create.html', {types: data});
-      }
-   });
-});
-
-// 处理/createEssay的post请求
-router.post('/createEssay', function(req, resp) {
-   var params = req.body;
-   if (!isValid(params.title)) {
-      resp.json({status: 'failed', message: '标题不能为空!' });
-      return;
-   }
-   if (!isValid(params.creator)) {
-      resp.json({status: 'failed', message: '作者不能为空!' });
-      return;
-   }
-   if (!(isValid(params.key) && isValid(params.value))) {
-      resp.json({status: 'failed', message: 'key或value不能为空!' });
-      return;
-   }
-   if (!isValid(params.typeid)) {
-      resp.json({status: 'failed', message: '类型不能为空!' });
-      return;
-   }
-   if (!isValid(params.content)) {
-      resp.json({status: 'failed', message: '内容不能为空!' });
-      return;
-   }
-   httputils.post(host, getURL('addNewEssay'), port, params, function(err, data) {
-      if (err) {
-         resp.json({status: 'failed', message: 'Server Error!'});
-      } else {
-         resp.json(data);
-      }
-   });
-});
-
-// 处理/validPassword的post请求
-router.post('/validPassword', function(req, resp) {
-   var params = req.body;
+router.post('/deleteEssay', function (req, resp) {
+   let params = req.body;
    if (!isValid(params.id)) {
       resp.json({
          status: 'failed',
-         message: 'id不能为空!'
+         message: '页面出错, 请刷新重试.'
       });
       return;
    }
-   httputils.post(host, getURL('getEssayById'), port, params, function(err, data) {
+   if (!(isValid(params.key) && isValid(params.value))) {
+      resp.json({
+         status: 'failed',
+         message: '令牌key或令牌value不能为空!'
+      });
+      return;
+   }
+   EssayUtils.deleteEssay(params, function(err, res){});
+   CommentUtils.removeCommentsByEssayId({essayId: params.id}, function(err, res) {});
+   httputils.post(host, getURL('deleteEssayById'), port, params, function(err, res) {
       if (err) {
          resp.json({
             status: 'failed',
-            message: 'Server Error !'
+            message: '服务器错误!'
          });
-         return;
       } else {
-         if (data.status === 'failed') {
-            resp.json({status: 'failed', message: '随笔不见了~~~'});
-         } else {
-            if (data.message === 'success') {
-               resp.json({status: 'success', message: 'ok'});
-            } else {
-               resp.json({status: 'failed', message: '密码错误!'});
-            }
-         }
+         resp.json(res);
       }
    });
 });
 
-// 处理/update的get请求
-router.get('/update', function(req, resp) {
-   var params = req.query;
-   if (!isValid(params.id)) {
-      resp.status(500).send('Server Error !');
-      return;
-   }
-   httputils.post(host, getURL('getEssayById'), port, params, function(err, data) {
-      if (err) {
-         resp.status(500).send('Server Error !');
-         return;
-      }
-      if (data.status === 'failed'){
-         resp.status(500).send(data.message);
-         return;
-      }
-      if (!(data.message === 'success')) {
-         resp.status(500).send(data.message);
-         return;
-      }
-      httputils.post(host, getURL('getAllType'), port, null, function(err, types) {
-         if (err) {
-            resp.status(500).send('Server Error !');
-            return;
-         }
-         resp.render('update.html', {
-            essay: data,
-            types: types,
-            password: params.password
-         });
-      });
-   });
-});
-
-//处理/updateEssay的post请求
-router.post('/updateEssay', function(req, resp) {
-   var params = req.body;
-   if (!isValid(params.id)){
-      resp.json({status: 'failed', message: '页面出错! 请刷新后重试!' });
-      return;
-   }
-   if (!isValid(params.title)) {
-      resp.json({status: 'failed', message: '标题不能为空!' });
-      return;
-   }
-   if (!isValid(params.creator)) {
-      resp.json({status: 'failed', message: '作者不能为空!' });
-      return;
-   }
-   if (!(isValid(params.key) && isValid(params.value))) {
-      resp.json({status: 'failed', message: 'key或value不能为空!' });
-      return;
-   }
-   if (!isValid(params.typeid)) {
-      resp.json({status: 'failed', message: '类型不能为空!' });
-      return;
-   }
-   if (!isValid(params.content)) {
-      resp.json({status: 'failed', message: '内容不能为空!' });
-      return;
-   }
-   httputils.post(host, getURL('updateEssay'), port, params, function(err, data) {
-      if (err) {
-         resp.json({status: 'failed', message: 'Server Error !'});
-         return;
-      }
-      resp.json(data);
-   });
-   
-});
- 
 module.exports = router;
+

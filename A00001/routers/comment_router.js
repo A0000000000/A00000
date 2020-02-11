@@ -1,119 +1,146 @@
 // 导入文件操作库
-var fs = require('fs');
+let fs = require('fs');
 // 导入path库
-var path = require('path');
+let path = require('path');
 // 导入自己封装http请求的工具
-var httputils = require(path.join(__dirname, '../utils/httputils'));
+let httputils = require(path.join(__dirname, '../utils/httputils'));
+// 导入操作Mongodb的库
+let runInfo = require(path.join(__dirname, '../utils/mongodb')).RunInfo;
+let CommentUtils = require(path.join(__dirname, '../utils/mongodb')).CommentUtils;
+
 // 导入静态数据
-var static_data = require(path.join(__dirname, '../utils/static_data'));
+let static_data = require(path.join(__dirname, '../utils/static_data'));
 // 导入express框架
-var express = require('express');
+let express = require('express');
 
 // 创建express路由
-var router = express.Router();
+let router = express.Router();
 
 // 导入showdown的库
-var showdown = require('showdown');
+let showdown = require('showdown');
 
 // 创建解析器
-var converter = new showdown.Converter();
+let converter = new showdown.Converter();
 
 // 请求主机地址
-var host = static_data.host;
+let host = static_data.host;
 
 // 请求主机的端口
-var port = static_data.port;
+let port = static_data.port;
 
 // 获取请求URL的地址
-var getURL = function(str) {
-    return static_data.before + str + static_data.after;
+let getURL = function(str) {
+   return static_data.before + str + static_data.after;
 }
 
 // 判断是否具有某个参数
-var isValid = function(str) {
+let isValid = function(str) {
    if (str === undefined || str === null || str === "") {
       return false;
    }
    return true;
 }
 
-// 处理/comments的get请求
-router.get('/comments', function(req, resp) {
-    var params = {};
-    params.essayId = req.query.id;
-    if (!isValid(params.essayId)) {
-        resp.status(500).send('请求参数出错!');
-    }
-    httputils.post(host, getURL('getCommentsByEssayId'), port, params, function(err, data) {
-        if (err) {
-            resp.status(500).send('Server Error !');
-        } else {
-            resp.render('comments.html', {
-                comments: data,
-                id: params.essayId
-            });
-        }
-    });
+router.get('/comment', function(req, resp) {
+   let params = req.query;
+   if (!isValid(params.essayId)) {
+      resp.send('参数错误!');
+      return;
+   }
+   let p1 = new Promise(function (resolve, reject) {
+      CommentUtils.getCommentsByEssayId(params, function(err, res) {
+         if (err || !res || res.length === 0) {
+            reject(err || '服务器无此记录');
+         } else {
+            resolve(res);
+         }
+      });
+   });
+   let p2 = p1.then(function (res) {
+      if (res) {
+         resp.render('comment.html', {comments: res, id: params.essayId});
+      }
+   }, function (err) {
+      return new Promise(function(resolve, reject) {
+         httputils.post(host, getURL('getCommentsByEssayId'), port, params, function(err, res) {
+            if (err) {
+               reject(err);
+            } else {
+               resolve(res);
+            }
+         });
+      });
+   });
+   p2.then(function(res) {
+      if (res) {
+         CommentUtils.addComments(res, function(err, res) {});
+         resp.render('comment.html', {comments: res, id: params.essayId});
+      }
+   }, function(err) {
+      resp.send(err);
+   });
 });
 
-// 处理/deleteComment的post请求
 router.post('/deleteComment', function(req, resp) {
-    var params = req.body;
-    if (!isValid(params.id)) {
-        resp.json({
+   let params = req.body;
+   if (!isValid(params.id)) {
+      resp.json({
+         status: 'failed',
+         message: '参数错误!'
+      });
+      return;
+   }
+   if (!(isValid(params.key) && isValid(params.value))) {
+      resp.json({
+         status: 'failed',
+         message: '令牌不能为空!'
+      });
+      return;
+   }
+   httputils.post(host, getURL('deleteCommentById'), port, params, function(err, res) {
+      if (err) {
+         resp.json({
             status: 'failed',
-            message: '页面出错, 请刷新后重试!'
-        });
-        return;
-    }
-    if(!(isValid(params.key) && isValid(params.value))) {
-        resp.json({
-            status: 'failed',
-            message: '令牌无效!'
-        });
-        return;
-    }
-    httputils.post(host, getURL('deleteCommentById'), port, params, function(err, data) {
-        if (err) {
-            resp.json({
-                status: 'failed',
-                message: 'Server Error !'
-            });
-            return;
-        } else {
-            resp.json(data);
-        }
-    });
+            message: '服务器错误!'
+         });
+      } else {
+         if (res.status === 'success') {
+            CommentUtils.removeCommentsById(params, function(err, res){});
+         }
+         resp.json(res);
+      }
+   });
 });
 
-// 处理/addComment的post请求
 router.post('/addComment', function(req, resp) {
-    var params = req.body;
-    if (!isValid(params.essayId)) {
-        resp.json({
+   let params = req.body;
+   if (!isValid(params.essayId)) {
+      resp.json({
+         status: 'failed',
+         message: '页面出错, 请刷新重试!'
+      });
+      return;
+   }
+   if (!(isValid(params.username) && params.content)) {
+      resp.json({
+         status: 'failed',
+         message: '昵称或内容不能为空!'
+      });
+      return;
+   }
+   httputils.post(host, getURL('addNewComment'), port, params, function(err, res) {
+      if (err) {
+         resp.json({
             status: 'failed',
-            message: '页面出错, 请刷新后重试!'
-        });
-        return;
-    }
-    if (!(isValid(params.username) && isValid(params.content))) {
-        resp.json({
-            status: 'failed',
-            message: '称呼或评论不能为空!'
-        });
-        return;
-    }
-    httputils.post(host, getURL('addNewComment'), port, params, function(err, data) {
-        if (err) {
-            resp.json({
-                status: 'failed',
-                message: 'Server Error !'
-            });
-            return;
-        } else {
-            resp.json(data);
-        }
-    });
+            message: '服务器错误!'
+         });
+      } else {
+         if (res.status === 'success') {
+            CommentUtils.removeCommentsByEssayId({essayId: params.essayId}, function(err, res) {});
+         }
+         resp.json(res);
+      }
+   });
 });
 
 module.exports = router;

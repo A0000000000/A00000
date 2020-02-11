@@ -3,5 +3,6 @@ module.exports = {
     port: 8080,
     before: '/A00000/',
     after: '.action',
-    TOKEN: 'TOKEN'
+    TOKEN: 'token',
+    mongourl: 'mongodb://localhost/A00001'
 }

@@ -28,11 +28,11 @@ public class EssayServiceImpl implements EssayService {
 
     @Override
     @Transactional
-    public List<Essay> getEssay(Integer page) {
-        int begin = (page - 1) * 10;
+    public List<Essay> getEssay(Integer page, Integer size) {
+        int begin = (page - 1) * size;
         List<Essay> essays = null;
         try {
-            essays = essayMapper.selectEssay(begin, 10);
+            essays = essayMapper.selectEssay(begin,  size);
             if (essays != null) {
                 ValueOperations vps = redisTemplate.opsForValue();
                 Map<String, Essay> cache = (Map<String, Essay>) vps.get(Essay.class.getName());
@@ -65,6 +65,7 @@ public class EssayServiceImpl implements EssayService {
                 if (essay != null) {
                     cache.put(essay.getId(), essay);
                 }
+            } else {
             }
             vps.set(Essay.class.getName(), cache);
         } catch (Exception e) {
@@ -162,5 +163,20 @@ public class EssayServiceImpl implements EssayService {
         } catch (Exception e) {
         }
         return false;
+    }
+
+    @Override
+    public Integer getEssayPages(Integer size) {
+        Integer count = 0;
+        try {
+            count = essayMapper.selectEssayCount();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Integer ret = count / size;
+        if (count % size > 0) {
+            ret++;
+        }
+        return ret;
     }
 }

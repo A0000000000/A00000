@@ -3,52 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- 导入jq, bs库 -->
-    <script src="/node_modules/jquery/dist/jquery.js" type="text/javascript" charset="UTF-8"></script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.js" type="text/javascript" charset="UTF-8"></script>
-    <link href="/node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" charset="UTF-8"/>
-    <link href="/public/css/index_main.css" rel="stylesheet" charset="UTF-8"/>
     <title>随笔列表</title>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">    
+    <script src="/public/js/essaylist.js"></script>
+    <link rel="stylesheet" href="/public/css/essaylist.css">
 </head>
 <body>
-    <div id="header">
-        <div id="name">你好, 我是A00000</div>
-        <div id="welcome">欢迎来到我的个人网站</div>
-    </div>
-    <div id="CreateEssay"><a href="/createEssay" target="_blank">编写新随笔</a></div>
-    <div class="container">
-        <div>
-            {{ each essaies }}
-            {{ if $index % 5 === 0}}
-            <div class="row center">
-            {{ /if }}
-                <div class="essay">
-                    <a target="_blank" href="/essay?id={{ $value.id }}">
-                        <p class="word"> {{ $value.title }} <font class="pwd">{{ $value.password === 'true' ? '[加密]' : '' }}</font></p>
-                    </a>
-                    <p class="word">作者: {{ $value.creator }}</p>
-                    <p class="word">创建时间: <br/> {{ $value.createTime }}</p>
-                    <p class="word">最后更新时间: <br/> {{ $value.updateTime }}</p>
-                </div>
-            {{ if ($index + 1) % 5 === 0}}
+    <div id="app" class="container">
+        <h1>随笔列表</h1>
+        <h6><a target="_blank" href="/create">编写一篇新随笔?</a></h6>
+        <div id="essay_container">
+            {{ each list }}
+            <div id="essay">
+                <a target="_blank" href="/essay?id={{ $value.id }}">{{ $value.title }}<span class="pwd">{{ $value.password === "true" ? "[加密]" : ""}}</span></a><br>
+                <div id="creator">作者: {{ $value.creator }}</div>
+                <div class="date">创建时间: {{ $value.createTime }}</div>
+                <div class="date">最后更新时间: {{ $value.updateTime }}</div>
             </div>
-            {{ /if }}
-            {{ /each }} 
-            {{ if essaies.length > 0 }}
-            </div>
-            {{ /if }}          
+            {{ /each }}
             <div class="clean"></div>
         </div>
-    </div>
-    <div id="page">
-        <a href="/essaylist?page={{ lastPage }}">上一页</a>
-        <font id="cruPage">当前为第{{ cruPage }}页</font>
-        <a href="/essaylist?page={{ nextPage }}">下一页</a>
-    </div>
-    <div id="footer">
-        <div>本系统已运行: {{ time }}毫秒</div>
-        <div>您是第{{ count }}位访问者, <a href="/friend" target="_blank">留下您的联系方式?</a></div>
+        <div id="footer">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a :class="last_page_class" :href="'/essaylist?page=' + (currentpage-1) + '&size=' + size">上一页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">
+                        这是第<span v-html="currentpage"></span>页,
+                        共<span v-html="pages"></span>页.
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a :class="next_page_class" :href="'/essaylist?page=' + (currentpage+1) + '&size=' + size">下一页</a>
+                  </li>
+              </ul>
+        </div>
+        <div id="addition">
+            <a target="_blank" href="/friend">留下您的联系方式?</a>
+        </div>
     </div>
 </body>
 </html>

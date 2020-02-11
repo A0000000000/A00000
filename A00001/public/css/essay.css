@@ -1,0 +1,76 @@
+body {
+    background-image: url(/public/images/tong.jpg);
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+
+#app {
+    background-color: rgba(128, 128, 128, 0.5);
+    margin-top: 100px;
+    padding-bottom: 50px;
+}
+
+#title {
+    padding-top: 50px;
+    float: left;
+    width: 80%;
+    text-align: center;
+}
+
+#title h1 {
+    color: #66CCFF;
+    font-style: italic;
+}
+
+#update {
+    float: left;
+    width: 10%;
+    text-align: center;
+    margin-right: 10%;
+}
+
+#update button {
+    margin: 15px;
+}
+
+.clean {
+    clear: both;
+}
+
+#msg {
+    color: #66FFCC;
+    font-size: large;
+    font-style: italic;
+}
+
+#msg .sub-msg {
+    float: left;
+    width: 50%;
+    padding-left: 15%;
+}
+
+#date {
+    color: purple;
+    font-size: large;
+    font-style: italic;
+}
+
+#date .sub-date {
+    float: left;
+    width: 50%;
+    padding-left: 10%;
+}
+
+#main {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 30px;
+}
+
+#footer {
+    text-align: center;
+    font-size: medium;
+    padding-top: 30px;
+}

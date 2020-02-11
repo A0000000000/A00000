@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A00000的个人网站</title>
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/vue/dist/vue.js"></script>
+    <script src="/public/js/index.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/public/css/index.css">
+    <link rel="stylesheet" href="/public/assets/waifu.css">
+    <script src="/public/assets/waifu-tips.js"></script>
+    <script src="/public/assets/live2d.js"></script>
+</head>
+<body>
+    <div id="app" class="container">
+        <div id="top">
+            <h1>你好, 我是A00000, 欢迎来到我的个人网站.</h1>
+        </div>
+        <div id="main_container">
+            <div id="left">
+                <h3>关于我</h3>
+                <div>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我是一名2017级的计算机专业的学生. 来自一个不知名的小乡村.
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平时喜欢看看番剧, 玩玩游戏. 不过玩的游戏大部分是手游, 因为可以躺被窝里玩(大冬天在被窝里是真的爽).
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我是一名彻头彻底的宅. 平时不是宅在家就是宅在宿舍. 不过也因为喜欢宅, 所以我有很多空闲的时间来干别的事情.
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别的也没什么好介绍的了, 我本身就是一个很普通不起眼的人, 以后要是有什么想到的再补充吧.
+                    </p>
+                </div>
+            </div>
+            <div id="main">
+                <h3>为什么要创建这个网站?</h3>
+                <div>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在我刚接触编程的时候, 经常会遇到一些问题. 这些问题仅凭我自己是解决不了. 而我又不想打扰老师去问, 最关键是很多东西是自学的, 所以也没有人可以问.
+                        只能通过<a href="https://cn.bing.com" target="_blank">必应</a>, <a href="https://www.google.com" target="_blank">谷歌</a>之类的搜索引擎去查找解决方法. 在查找解决方法的时候, 我见识到了
+                        很多大佬的各种各样的博客. 我感觉他们的真的好厉害啊, 什么时候我也能有个属于自己的网站呢?
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在经过大学里的一些关于Web的学习和自己自学的一些知识. 现在总算有了一点基础, 可以稍微做一下自己的网站了, 所以在很早以前就想做的网站, 现在终于
+                        可以开始下手去做了. 这个网站也就诞生了.
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果不出意外的话, 这个网站我应该会一直维护下去. 不过本人的前端水平实在是太差了, 所以这个网站的所有的页面应该都不会太好看...
+                    </p>
+                </div>
+            </div>
+            <div class="clean"></div>
+        </div>
+        <div id="msg">
+            <div>本网站已运行时间: <span v-html='showDate'></span></div>
+            <div>您是第<span v-html='count'></span>位访客</div>
+        </div>
+        <div id="footer">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link" target="_blank" href="https://github.com/A0000000000">Github</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" target="_blank" href="https://leetcode-cn.com/u/a000000/">LeetCode</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" target="_blank" href="/essaylist">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="https://a0000000000.github.io/">Github Pages</a>
+                  </li>
+              </ul>
+        </div>
+    </div>
+    <div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+    </div>
+</body>
+</html>

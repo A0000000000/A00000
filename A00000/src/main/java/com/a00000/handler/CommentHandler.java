@@ -46,6 +46,7 @@ public class CommentHandler {
             map.put("username", comment.getUsername());
             map.put("content", comment.getContent());
             map.put("createTime", format.format(comment.getCreateTime().getTime()));
+            map.put("essayId", essayId);
             list.add(map);
         }
         return list;

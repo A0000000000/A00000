@@ -107,8 +107,8 @@ public class TypeServiceImpl implements TypeService {
                 cache = new HashMap<>();
             }
             for (Map.Entry<String, Essay> item : cache.entrySet()) {
-                if (item.getValue().getTypeid().equals(id)) {
-                    cache.remove(item.getKey());
+                if (id.equals(item.getValue().getTypeid())) {
+                    cache.get(item.getKey()).setTypeid("0");
                 }
             }
             vps.set(Essay.class.getName(), cache);

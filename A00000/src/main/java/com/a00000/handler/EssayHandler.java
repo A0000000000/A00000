@@ -3,7 +3,6 @@ package com.a00000.handler;
 import com.a00000.bean.Essay;
 import com.a00000.service.EssayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +33,16 @@ public class EssayHandler {
      * @throws Exception 类型转换出错等异常
      */
     @RequestMapping("getAllEssayTitle")
-    public @ResponseBody List<Map<String, Object>> getAllEssayTitle(@RequestParam("page") Integer page) throws Exception {
+    public @ResponseBody List<Map<String, Object>> getAllEssayTitle(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) throws Exception {
         if (page == null || page <= 0) {
             page = 1;
         }
+        if (size == null || size <= 0) {
+            size = 10;
+        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<Map<String, Object>> res = new ArrayList<>();
-        List<Essay> essays = essayService.getEssay(page);
+        List<Essay> essays = essayService.getEssay(page, size);
         essays.stream().forEach(essay -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", essay.getId());
@@ -173,4 +175,21 @@ public class EssayHandler {
         return map;
     }
 
+    /**
+     * 获取随笔的页数
+     * @param size 每页的数量
+     * @return JSON格式数据
+     * @throws Exception SQL异常
+     */
+    @RequestMapping("getPagesCount")
+    public @ResponseBody Map<String, Object> getPagesCount(@RequestParam(value = "size", required = false) Integer size) throws Exception {
+        if (size == null || size <= 0) {
+            size = 10;
+        }
+        Map<String, Object> map = new HashMap<>();
+        Integer pages = essayService.getEssayPages(size);
+        map.put("status", "success");
+        map.put("pages", pages);
+        return map;
+    }
 }

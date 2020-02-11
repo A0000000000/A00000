@@ -68,4 +68,11 @@ public interface EssayMapper {
     @Update("update t_essay set typeid = #{target} where typeid = #{source}")
     int updateEssayByType(@Param("source") String source, @Param("target") String target) throws Exception;
 
+    /**
+     * 获取所有随笔的数量
+     * @return 返回随笔数量
+     * @throws Exception SQL异常
+     */
+    @Select("select count(id) from t_essay")
+    Integer selectEssayCount() throws Exception;
 }
