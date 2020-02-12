@@ -44,7 +44,7 @@ app.use(require('./routers/friend_router.js'));
 app.use(require('./routers/comment_router.js'));
 app.use(require('./routers/addition_router.js'));
 
-app.listen(3000, function() {
-    LogUtils.logInfo('App is Running at Port 3000.', __filename, '程序启动入口.', new Date());
+app.listen(80, function() {
+    LogUtils.logInfo('App is Running at Port 80.', __filename, '程序启动入口.', new Date());
 });
 
