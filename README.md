@@ -14,11 +14,13 @@
     * node的作用主要是进行路由和服务端页面渲染
     * node的数据来源于后端
     * node使用了MongoDB数据库做http缓存
+    * 增加日志功能, 默认日志信息输出到控制台
 5. 后端
     * 后端使用JavaWeb
     * 后端框架为SpringMVC, Spring, MyBatis
     * Service层使用Redis做缓存
     * Dao层使用EhCache做二级缓存
+    * 增加日志功能, 默认日志信息输出到控制台
 6. 数据库
     * 数据库使用MySQL, Redis, MongoDB
     * 数据表维护了5张
