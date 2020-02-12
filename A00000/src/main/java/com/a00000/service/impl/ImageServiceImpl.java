@@ -3,6 +3,7 @@ package com.a00000.service.impl;
 import com.a00000.bean.Image;
 import com.a00000.mapper.ImageMapper;
 import com.a00000.service.ImageService;
+import com.a00000.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -24,6 +25,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public int saveImages(List<Image> images) {
+        LogUtils.LogInfo("ImageServiceImpl.saveImages", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         int count = 0;
         for (Image image : images) {
             if (image != null) {
@@ -38,6 +40,7 @@ public class ImageServiceImpl implements ImageService {
                         count++;
                     }
                 } catch (Exception e) {
+                    LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
                 }
             }
         }
@@ -47,19 +50,35 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public List<Image> getAllImages() {
+        LogUtils.LogInfo("ImageServiceImpl.getAllImages", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         List<Image> list = null;
-        ValueOperations vps = redisTemplate.opsForValue();
-        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
-        if (cache == null) {
-            cache = new HashMap<>();
+        ValueOperations vps = null;
+        Map<String, Image> cache = null;
+        try {
+            vps = redisTemplate.opsForValue();
+            cache = (Map<String, Image>) vps.get(Image.class.getName());
+            if (cache == null) {
+                cache = new HashMap<>();
+            }
+        } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         try {
             list = imageMapper.selectAllImages();
-            for (Image image : list) {
-                cache.put(image.getId(), image);
+            if (list != null) {
+                try {
+                    for (Image image : list) {
+                        if (image != null) {
+                            cache.put(image.getId(), image);
+                        }
+                    }
+                    vps.set(Image.class.getName(), cache);
+                } catch (Exception e) {
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                }
             }
-            vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return list;
     }
@@ -67,19 +86,34 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public Image getImageById(String id) {
+        LogUtils.LogInfo("ImageServiceImpl.getImageById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         Image image = null;
-        ValueOperations vps = redisTemplate.opsForValue();
-        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
-        if (cache == null) {
-            cache = new HashMap<>();
+        ValueOperations vps = null;
+        Map<String, Image> cache = null;
+        try {
+            vps = redisTemplate.opsForValue();
+            cache = (Map<String, Image>) vps.get(Image.class.getName());
+            if (cache == null) {
+                cache = new HashMap<>();
+            }
+            image = cache.get(id);
+        } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         try {
-            image = cache.get(id);
             if (image == null) {
                 image = imageMapper.selectImageById(id);
+                try {
+                    if (image != null) {
+                        cache.put(image.getId(), image);
+                        vps.set(Image.class.getName(), cache);
+                    }
+                } catch (Exception e) {
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                }
             }
-            vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return image;
     }
@@ -87,19 +121,25 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public boolean deleteImageById(String id) {
-        ValueOperations vps = redisTemplate.opsForValue();
-        Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
-        if (cache == null) {
-            cache = new HashMap<>();
+        LogUtils.LogInfo("ImageServiceImpl.deleteImageById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        try {
+            ValueOperations vps = redisTemplate.opsForValue();
+            Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
+            if (cache == null) {
+                cache = new HashMap<>();
+            }
+            cache.remove(id);
+            vps.set(Image.class.getName(), cache);
+        } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         try {
-            cache.remove(id);
             int count = imageMapper.deleteImageById(id);
-            vps.set(Image.class.getName(), cache);
             if (count > 0) {
                 return true;
             }
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return false;
     }

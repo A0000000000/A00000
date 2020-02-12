@@ -5,6 +5,7 @@ import com.a00000.bean.Essay;
 import com.a00000.mapper.CommentMapper;
 import com.a00000.mapper.EssayMapper;
 import com.a00000.service.EssayService;
+import com.a00000.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -29,6 +30,7 @@ public class EssayServiceImpl implements EssayService {
     @Override
     @Transactional
     public List<Essay> getEssay(Integer page, Integer size) {
+        LogUtils.LogInfo("EssayServiceImpl.getEssay", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         int begin = (page - 1) * size;
         List<Essay> essays = null;
         try {
@@ -45,6 +47,7 @@ public class EssayServiceImpl implements EssayService {
                 vps.set(Essay.class.getName(), cache);
             }
         } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return essays;
     }
@@ -52,23 +55,34 @@ public class EssayServiceImpl implements EssayService {
     @Override
     @Transactional
     public Essay getEssayById(String id) {
+        LogUtils.LogInfo("EssayServiceImpl.getEssayById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         Essay essay = null;
         try {
-            ValueOperations vps = redisTemplate.opsForValue();
-            Map<String, Essay> cache = (Map<String, Essay>) vps.get(Essay.class.getName());
-            if (cache == null) {
-                cache = new HashMap<>();
+            ValueOperations vps = null;
+            Map<String, Essay> cache = null;
+            try {
+                vps = redisTemplate.opsForValue();
+                cache = (Map<String, Essay>) vps.get(Essay.class.getName());
+                if (cache == null) {
+                    cache = new HashMap<>();
+                }
+                essay = cache.get(id);
+            } catch (Exception e) {
+                LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
             }
-            essay = cache.get(id);
             if (essay == null) {
                 essay = essayMapper.selectEssayById(id);
-                if (essay != null) {
-                    cache.put(essay.getId(), essay);
+                try {
+                    if (essay != null) {
+                        cache.put(essay.getId(), essay);
+                        vps.set(Essay.class.getName(), cache);
+                    }
+                } catch (Exception e) {
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
                 }
-            } else {
             }
-            vps.set(Essay.class.getName(), cache);
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return essay;
     }
@@ -76,32 +90,35 @@ public class EssayServiceImpl implements EssayService {
     @Override
     @Transactional
     public boolean deleteEssayById(String id) {
+        LogUtils.LogInfo("EssayServiceImpl.deleteEssayById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         boolean res = false;
-        ValueOperations vps = redisTemplate.opsForValue();
         try {
-            Map<String, List<Comment>> cache = (Map<String, List<Comment>>) vps.get(Comment.class.getName());
-            if (cache != null) {
-                cache.remove(id);
+            ValueOperations vps = redisTemplate.opsForValue();
+            Map<String, List<Comment>> cacheComment = (Map<String, List<Comment>>) vps.get(Comment.class.getName());
+            if (cacheComment != null) {
+                cacheComment.remove(id);
             } else {
-                cache = new HashMap<>();
+                cacheComment = new HashMap<>();
             }
-            vps.set(Comment.class.getName(), cache);
-            commentMapper.deleteAssetEssay(id);
+            vps.set(Comment.class.getName(), cacheComment);
+            Map<String, Essay> cacheEssay = (Map<String, Essay>) vps.get(Essay.class.getName());
+            if (cacheEssay != null) {
+                cacheEssay.remove(id);
+            } else {
+                cacheEssay = new HashMap<>();
+            }
+            vps.set(Essay.class.getName(), cacheEssay);
         } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         try {
-            Map<String, Essay> cache = (Map<String, Essay>) vps.get(Essay.class.getName());
-            if (cache != null) {
-                cache.remove(id);
-            } else {
-                cache = new HashMap<>();
-            }
-            vps.set(Essay.class.getName(), cache);
+            commentMapper.deleteAssetEssay(id);
             int count = essayMapper.deleteEssayById(id);
             if (count > 0) {
                 res = true;
             }
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return res;
     }
@@ -109,6 +126,7 @@ public class EssayServiceImpl implements EssayService {
     @Override
     @Transactional
     public boolean addNewEssay(Essay essay) {
+        LogUtils.LogInfo("EssayServiceImpl.addNewEssay", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         boolean res = false;
         essay.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         essay.setCreateTime(new Date());
@@ -122,6 +140,7 @@ public class EssayServiceImpl implements EssayService {
                 res = true;
             }
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return res;
     }
@@ -129,22 +148,28 @@ public class EssayServiceImpl implements EssayService {
     @Override
     @Transactional
     public boolean updateEssay(Essay essay) {
+        LogUtils.LogInfo("EssayServiceImpl.updateEssay", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         Essay target = null;
         try {
             target = essayMapper.selectEssayById(essay.getId());
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         if(target == null) {
             return false;
         }
-        ValueOperations vps = redisTemplate.opsForValue();
-        Map<String, Essay> cache = (Map<String, Essay>) vps.get(Essay.class.getName());
-        if (cache != null) {
-            cache.remove(target.getId());
-        } else {
-            cache = new HashMap<>();
+        try {
+            ValueOperations vps = redisTemplate.opsForValue();
+            Map<String, Essay> cache = (Map<String, Essay>) vps.get(Essay.class.getName());
+            if (cache != null) {
+                cache.remove(target.getId());
+            } else {
+                cache = new HashMap<>();
+            }
+            vps.set(Essay.class.getName(), cache);
+        } catch (Exception e) {
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
-        vps.set(Essay.class.getName(), cache);
         target.setUpdateTime(new Date());
         target.setTitle(essay.getTitle());
         target.setCreator(essay.getCreator());
@@ -161,17 +186,19 @@ public class EssayServiceImpl implements EssayService {
                 return true;
             }
         } catch (Exception e) {
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         return false;
     }
 
     @Override
     public Integer getEssayPages(Integer size) {
+        LogUtils.LogInfo("EssayServiceImpl.getEssayPages", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         Integer count = 0;
         try {
             count = essayMapper.selectEssayCount();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
         }
         Integer ret = count / size;
         if (count % size > 0) {

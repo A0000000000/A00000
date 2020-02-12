@@ -1,85 +1,76 @@
-// 导入文件操作库
-let fs = require('fs');
-// 导入path库
 let path = require('path');
-// 导入自己封装http请求的工具
-let httputils = require(path.join(__dirname, '../utils/httputils'));
-// 导入操作Mongodb的库
 let runInfo = require(path.join(__dirname, '../utils/mongodb')).RunInfo;
-// 导入静态数据
-let static_data = require(path.join(__dirname, '../utils/static_data'));
-// 导入express框架
+let LogUtils = require(path.join(__dirname, '../utils/logutils'));
 let express = require('express');
-
-// 创建express路由
 let router = express.Router();
 
-// 导入showdown的库
-let showdown = require('showdown');
-
-// 创建解析器
-let converter = new showdown.Converter();
-
-// 请求主机地址
-let host = static_data.host;
-
-// 请求主机的端口
-let port = static_data.port;
-
-// 获取请求URL的地址
-let getURL = function(str) {
-   return static_data.before + str + static_data.after;
-}
-
-// 判断是否具有某个参数
-let isValid = function(str) {
-   if (str === undefined || str === null || str === "") {
-      return false;
-   }
-   return true;
-}
-
-
-// 处理/的get请求
 router.get('/', function (req, resp) {
+   LogUtils.logInfo('Get /', __filename, '处理/的Get请求.', new Date());
    resp.render('index.html');
 });
 
 router.get('/index', function (req, resp) {
+   LogUtils.logInfo('Get /index', __filename, '处理/index的Get请求.', new Date());
     resp.render('index.html');
 });
 
 router.post('/getServerRunTime', function (req, resp) {
-   runInfo.getRunDate(function(err, ret) {
-      if (err) {
-         resp.json({
-            status: 'failed',
-            msg: err
-         });
-      } else {
-         resp.json({
-            status: 'success',
-            date: ret
-         });
-      }
-   });
+   LogUtils.logInfo('Post /getServerRunTime', __filename, '处理/getServerRunTime的Post请求.', new Date());
+   try {
+      LogUtils.logInfo('Get RunData From MongoDB', __filename, '从MongoDB中获取系统运行的时间.', new Date());
+      runInfo.getRunDate(function(err, ret) {
+         if (err) {
+            LogUtils.logWarning(err, __filename, '从MongoDB中获得运行时间失败.', new Date());
+            resp.json({
+               status: 'failed',
+               msg: err
+            });
+         } else {
+            resp.json({
+               status: 'success',
+               date: ret
+            });
+         }
+      });
+   } catch (err) {
+      LogUtils.logWarning(err, __filename, '从MongoDB中获得运行时间时, 访问数据库失败.', new Date());
+      resp.json({
+         status: 'failed',
+         msg: err
+      });
+   }
 });
 
 router.post('/getAccessCount', function(req, resp) {
-   runInfo.getAccessCount(function(err, ret) {
-      if (err) {
-         resp.json({
-            status: 'failed',
-            msg: err
-         });
-      } else {
-         resp.json({
-            status: 'success',
-            count: ret
-         });
-         runInfo.addAccessCount(function(err, ret){ }, Number(ret) + 1)
-      }
-   });
+   LogUtils.logInfo('Post /getAccessCount', __filename, '处理/getAccessCount的Post请求.', new Date());
+   try {
+      LogUtils.logInfo('Get AccessCount From MongoDB', __filename, '从MongoDB中获取访问人数.', new Date());
+      runInfo.getAccessCount(function(err, ret) {
+         if (err) {
+            LogUtils.logWarning(err, __filename, '从MongoDB中获得访问人数失败.', new Date());
+            resp.json({
+               status: 'failed',
+               msg: err
+            });
+         } else {
+            resp.json({
+               status: 'success',
+               count: ret
+            });
+            runInfo.addAccessCount(function(err, ret){
+               if (err) {
+                  LogUtils.logWarning(err, __filename, '向MongoDB中增加一个访问人数时, 出错.', new Date());
+               }
+            }, Number(ret) + 1)
+         }
+      });
+   } catch (err) {
+      LogUtils.logWarning(err, __filename, '从MongoDB中获得访问人数时, 访问数据库出错.', new Date());
+      resp.json({
+         status: 'failed',
+         msg: err
+      });
+   }
 });
 
 module.exports = router;

@@ -1,40 +1,15 @@
-// 导入文件操作库
-let fs = require('fs');
-// 导入path库
 let path = require('path');
-// 导入自己封装http请求的工具
 let httputils = require(path.join(__dirname, '../utils/httputils'));
-// 导入操作Mongodb的库
 let EssayUtils = require(path.join(__dirname, '../utils/mongodb')).EssayUtils;
-let TypeUtils = require(path.join(__dirname, '../utils/mongodb')).TypeUtils;
-let CommentUtils = require(path.join(__dirname, '../utils/mongodb')).CommentUtils;
-
-// 导入静态数据
+let LogUtils = require(path.join(__dirname, '../utils/logutils'));
 let static_data = require(path.join(__dirname, '../utils/static_data'));
-// 导入express框架
 let express = require('express');
-
-// 创建express路由
 let router = express.Router();
-
-// 导入showdown的库
-let showdown = require('showdown');
-
-// 创建解析器
-let converter = new showdown.Converter();
-
-// 请求主机地址
 let host = static_data.host;
-
-// 请求主机的端口
 let port = static_data.port;
-
-// 获取请求URL的地址
 let getURL = function(str) {
    return static_data.before + str + static_data.after;
 }
-
-// 判断是否具有某个参数
 let isValid = function(str) {
    if (str === undefined || str === null || str === "") {
       return false;
@@ -43,10 +18,13 @@ let isValid = function(str) {
 }
 
 router.get('/updateEssay', function(req, resp) {
+    LogUtils.logInfo('Get /updateEssay', __filename, '处理/updateEssay的Get请求.', new Date());
     let params = req.query;
     new Promise(function(resolve, reject) {
+        LogUtils.logInfo('Request Post getEssayById', __filename, '向后端/getEssayById发起Post请求.', new Date());
         httputils.post(host, getURL('getEssayById'), port, params, function(err, res) {
             if (err) {
+                LogUtils.logError(err, __filename, '向后端getEssayById请求时, 服务器出错.', new Date());
                 reject('服务器错误!');
             } else {
                 if (res.status === 'failed') {
@@ -62,8 +40,10 @@ router.get('/updateEssay', function(req, resp) {
         });
     }).then(function(essay) {
         if (essay) {
+            LogUtils.logInfo('Request Post getAllType', __filename, '向后端getAllType发起Post请求时.', new Date());
             httputils.post(host, getURL('getAllType'), port, null, function(err, types) {
                 if (err) {
+                    LogUtils.logError(err, __filename, '向后端发起getAllType请求时, 服务器出错.', new Date());
                     resp.send('服务器错误');
                 } else {
                     essay.password = params.password;
@@ -77,6 +57,7 @@ router.get('/updateEssay', function(req, resp) {
 });
 
 router.post('/updateEssay', function(req, resp) {
+    LogUtils.logInfo('Post /updateEssay', __filename, '处理/updateEssay的Post请求.', new Date());
     let params = req.body;
     if (!isValid(params.id)) {
         resp.json({
@@ -127,10 +108,19 @@ router.post('/updateEssay', function(req, resp) {
         });
         return;
     }
-    EssayUtils.deleteEssay({id: params.id}, function(err, res) {});
+    try {
+        LogUtils.logInfo('Delete Essay From MongoDB', __filename, '从MongoDB中删除修改的Essay记录.', new Date());
+        EssayUtils.deleteEssay({id: params.id}, function(err, res) {
+            LogUtils.logWarning(err, __filename, '从MongoDB中删除修改的Essay时, 出错.', new Date());
+        });
+    } catch (err) {
+        LogUtils.logWarning(err, __filename, '从MongoDB中删除修改的Essay时, 访问数据库出错.', new Date());
+    }
     let p1 = new Promise(function(resolve, reject) {
+        LogUtils.logInfo('Request Post updateEssay', __filename, '向后端updateEssay发起Post请求.', new Date());
         httputils.post(host, getURL('updateEssay'), port, params, function(err, res) {
             if (err) {
+                LogUtils.logError(err, __filename, '向后端updateEssay发起请求时, 服务器出错.', new Date());
                 reject(err);
             } else {
                 resolve(res);

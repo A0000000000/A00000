@@ -1,11 +1,24 @@
-// 导入库
 let mongoose = require('mongoose');
 let path = require('path');
 let static_data = require(path.join(__dirname, 'static_data'));
-// 连接数据库
-mongoose.connect(static_data.mongourl, { useNewUrlParser: true, useUnifiedTopology: true});
-mongoose.Promise = global.Promise;
+let LogUtils = require(path.join(__dirname, 'logutils'));
 
+try {
+    mongoose.connect(static_data.mongourl, { 
+        useNewUrlParser: true, 
+        useUnifiedTopology: true
+    }).then(function(msg) {
+        if (msg) {
+            LogUtils.logWarning(msg, __filename, '连接信息.', new Date());
+        }
+    });
+} catch (err) {
+    if (err) {
+        LogUtils.logWarning(err, __filename, '连接出错, 放弃连接.', new Date());
+    }
+}
+mongoose.Promise = global.Promise;
+const conn = mongoose.connection;
 let DateModel = mongoose.model('RunDate', {id: String, StartDate: Date});
 let CountModel= mongoose.model('RunAccess', {id: String, Count: Number});
 let EssayModel = mongoose.model('Essay', {
@@ -37,7 +50,36 @@ let ImageModel = mongoose.model('Image', {
 });
 
 let RunInfo = {
-    getRunDate (callback) {
+    getRunDate: null,
+    getAccessCount: null,
+    addAccessCount: null
+};
+let EssayUtils = {
+    getEssayById: null ,
+    saveEssay: null,
+    deleteEssay: null ,
+    deleteEssayByType: null
+};
+let TypeUtils = {
+    getTypeById: null,
+    saveType: null,
+    deleteType: null
+};
+let CommentUtils = {
+    getCommentsByEssayId: null,
+    removeCommentsByEssayId: null,
+    removeCommentsById: null,
+    addComments: null
+};
+let ImageUtils = {
+    getImageById: null,
+    deleteImage: null,
+    saveImage: null
+}
+
+conn.on('connected', function() {
+    LogUtils.logInfo('MongoDB connect success', __filename, 'MongoDB数据库连接成功', new Date());
+    RunInfo.getRunDate = function (callback) {
         DateModel.findOne({id: '0'}, function (err, ret) {
             if (err) {
                 callback(err);
@@ -45,8 +87,8 @@ let RunInfo = {
                 callback(err, new Date() - ret.StartDate);
             }
         });
-    },
-    getAccessCount (callback) {
+    }
+    RunInfo.getAccessCount = function (callback) {
         CountModel.findOne({id: '0'}, function (err, ret) {
             if (err) {
                 callback(err);
@@ -54,37 +96,34 @@ let RunInfo = {
                 callback(err, ret.Count);
             }
         });
-    },
-    addAccessCount (callback, count) {        
+    }
+    RunInfo.addAccessCount = function (callback, count) {        
         if (!count || isNaN(count)) {
             return;
         }
         CountModel.findOneAndUpdate({id: '0'}, {Count: count}, callback);
     }
-};
-
-let EssayUtils = {
-    getEssayById (params, callback) {
+    EssayUtils.getEssayById = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         EssayModel.findOne({id: id}, callback);
-    },
-    saveEssay (params, callback) {
+    }
+    EssayUtils.saveEssay = function (params, callback) {
         let saved = new EssayModel(params);
         saved.save(callback);
-    },
-    deleteEssay (params, callback) {
+    }
+    EssayUtils.deleteEssay = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         EssayModel.deleteOne({id: id}, callback);
-    },
-    deleteEssayByType (params, callback) {
+    }
+    EssayUtils.deleteEssayByType = function (params, callback) {
         const typeid = params.typeid;
         if (!typeid) {
             callback('数据库无此记录', null);
@@ -92,22 +131,19 @@ let EssayUtils = {
         }
         EssayModel.deleteMany({typeid: typeid}, callback);
     }
-};
-
-let TypeUtils = {
-    getTypeById (params, callback) {
+    TypeUtils.getTypeById = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         TypeModel.findOne({id: id}, callback);
-    },
-    saveType (params, callback) {
+    }
+    TypeUtils.saveType = function (params, callback) {
         let saved = new TypeModel(params);
         saved.save(callback);
-    },
-    deleteType (params, callback) {
+    }
+    TypeUtils.deleteType = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
@@ -115,34 +151,31 @@ let TypeUtils = {
         }
         TypeModel.deleteOne({id: id}, callback);
     }
-};
-
-let CommentUtils = {
-    getCommentsByEssayId (params, callback) {
+    CommentUtils.getCommentsByEssayId = function (params, callback) {
         const essayId = params.essayId;
         if (!essayId) {
             callback('数据库无此记录', null);
             return;
         }
         CommentModel.find({essayId, essayId}, callback);
-    },
-    removeCommentsByEssayId (params, callback) {
+    }
+    CommentUtils.removeCommentsByEssayId = function (params, callback) {
         const essayId = params.essayId;
         if (!essayId) {
             callback('数据库无此记录', null);
             return;
         }
         CommentModel.deleteMany({essayId: essayId}, callback);
-    },
-    removeCommentsById (params, callback) {
+    }
+    CommentUtils.removeCommentsById = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         CommentModel.deleteOne({id: id}, callback);
-    },
-    addComments(params, callback) {
+    }
+    CommentUtils.addComments = function (params, callback) {
         if (!(params instanceof  Array)) {
             callback('failed', null);
         }
@@ -151,26 +184,23 @@ let CommentUtils = {
             tmp.save(callback);
         }
     }
-};
-
-let ImageUtils = {
-    getImageById (params, callback) {
+    ImageUtils.getImageById = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         ImageModel.findOne({id: id}, callback);
-    },
-    deleteImage (params, callback) {
+    }
+    ImageUtils.deleteImage = function (params, callback) {
         const id = params.id;
         if (!id) {
             callback('数据库无此记录', null);
             return;
         }
         ImageModel.deleteOne({id: id}, callback);
-    },
-    saveImage (params, callback) {
+    }
+    ImageUtils.saveImage = function (params, callback) {
         if (params.password === 'false') {
             let tmp = new ImageModel(params);
             tmp.save(callback);
@@ -178,7 +208,62 @@ let ImageUtils = {
             callback('failed', null);
         }
     }
-}
+});
+
+
+conn.on('error', function(err) {
+    if (err) {
+        LogUtils.logWarning(err, __filename, '连接出错, 放弃连接.', new Date());
+        RunInfo.getRunDate = function(callback) {
+            callback('Cannt connect MongoDB');
+        }
+        RunInfo.getAccessCount = function(callback) {
+            callback('Cannt connect MongoDB');
+        }
+        EssayUtils.getEssayById = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        EssayUtils.saveEssay = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        EssayUtils.deleteEssay = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        EssayUtils.deleteEssayByType = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TypeUtils.getTypeById = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TypeUtils.saveType = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TypeUtils.deleteType = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        CommentUtils.getCommentsByEssayId = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        CommentUtils.removeCommentsByEssayId = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        CommentUtils.removeCommentsById = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        CommentUtils.addComments = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        ImageUtils.getImageById = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        ImageUtils.deleteImage = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        ImageUtils.saveImage = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+    }
+});
 
 module.exports = {
     RunInfo: RunInfo,
@@ -187,5 +272,3 @@ module.exports = {
     CommentUtils: CommentUtils,
     ImageUtils: ImageUtils
 }
-
-

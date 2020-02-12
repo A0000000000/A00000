@@ -1,4 +1,3 @@
-// 判断是否具有某个参数
 let isValid = function(str) {
     if (str === undefined || str === null || str === "") {
        return false;

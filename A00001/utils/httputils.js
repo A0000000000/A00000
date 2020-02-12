@@ -1,9 +1,6 @@
-// 导入http库
 var http = require('http');
-// 导入querystring库
 var querystring = require('querystring');
 var static_data = require('./static_data');
-// 判断一个字符串是否可以转换为json
 function isJson(str) {
     try {
         if (typeof JSON.parse(str) == "object") {
@@ -14,7 +11,6 @@ function isJson(str) {
     return false;
 }
 
-// 封装的get请求
 function get(host, path, port, params, callback) {
     if (!params) {
         params = {}
@@ -44,7 +40,6 @@ function get(host, path, port, params, callback) {
     req.end();
 }
 
-// 封装的post请求
 function post(host, path, port, params, callback) {
     if (!params) {
         params = {}
