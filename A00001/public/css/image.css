@@ -2,6 +2,7 @@ body {
     background-color: gray;
     background-repeat:no-repeat;
     background-attachment:fixed;
+    background-size: cover;
 }
 
 #delete {

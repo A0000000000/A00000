@@ -18,33 +18,33 @@
             <table class="table">
                 <tbody>
                     <tr>
-                    <td>随笔标题: </td>
-                    <td><input type="text" v-model="title" placeholder="请输入随笔标题"/></td>
-                    <td>创建者: </td>
-                    <td><input type="text" v-model="creator" placeholder="请输入作者" value="A00000"/></td>
+                        <td>随笔标题: </td>
+                        <td><input type="text" v-model="title" placeholder="请输入随笔标题"/></td>
+                        <td>创建者: </td>
+                        <td><input type="text" v-model="creator" placeholder="请输入作者" value="A00000"/></td>
                     </tr>
                     <tr>
-                    <td>令牌Key: </td>
-                    <td><input type="text" v-model="key" placeholder="请输入令牌Key"/></td>
-                    <td>令牌Value: </td>
-                    <td><input type="password" v-model="value" placeholder="请输入令牌Value"/></td>
+                        <td>令牌Key: </td>
+                        <td><input type="text" v-model="key" placeholder="请输入令牌Key"/></td>
+                        <td>令牌Value: </td>
+                        <td><input type="password" v-model="value" placeholder="请输入令牌Value"/></td>
                     </tr>
                     <tr>
-                    <td>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" v-on:change="handleChangePwd($event)" id="isPassword" />
-                            <label class="form-check-label" for="isPassword">是否需要密码</label>
-                        </div>
-                    </td>
-                    <td><input type="password" v-bind:disabled="disabled" v-model="password" placeholder="请输入密码"/></td>
-                    <td>选择随笔类型: </td>
-                    <td>
-                        <select v-model="type">
-                            {{ each types }}
-                            <option value="{{ $value.id }}">{{ $value.name }}</option>
-                            {{ /each }}
-                        </select>
-                    </td>
+                        <td>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" v-on:change="handleChangePwd($event)" id="isPassword" />
+                                <label class="form-check-label" for="isPassword">是否需要密码</label>
+                            </div>
+                        </td>
+                        <td><input type="password" v-bind:disabled="disabled" v-model="password" placeholder="请输入密码"/></td>
+                        <td>选择随笔类型: </td>
+                        <td>
+                            <select v-model="type">
+                                {{ each types }}
+                                <option value="{{ $value.id }}">{{ $value.name }}</option>
+                                {{ /each }}
+                            </select>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -53,7 +53,7 @@
         <div id="main">
             <div class="content" id="write">
                 <h1 class="tips">创作内容(支持MarkDown)</h1>
-                <textarea id="writeContent" v-model="content"></textarea>
+                <textarea id="writeContent" @keydown.tab="handleTabKeyDown($event)" v-model="content"></textarea>
             </div>
             <div class="content" id="show">
                 <h1 class="tips">预览效果(<a href="/images" target="_blank">查看全部图片</a>)</h1>

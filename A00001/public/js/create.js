@@ -76,6 +76,19 @@ $(function() {
             },
             clean () {
                 this.content = '';
+            },
+            handleTabKeyDown (e) {
+                let target = e.target;
+                let indent = '    ';
+                let start = target.selectionStart;
+                let end = target.selectionEnd;
+                this.content = this.content.substring(0, start) + indent + this.content.substring(end);
+                setTimeout(function() {
+                    target.selectionStart = start + indent.length;  
+                    target.selectionEnd = end + indent.length;
+                    target.focus();
+                }, 1);
+                e.preventDefault();
             }
         },
         computed: {

@@ -31,6 +31,8 @@ body {
 
 #form {
     text-align: center;
+    width: 100%;
+    overflow: auto;
 }
 
 #upload {

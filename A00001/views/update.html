@@ -54,7 +54,7 @@
         <div id="main">
             <div class="content" id="write">
                 <h1 class="tips">创作内容(支持MarkDown)</h1>
-                <textarea id="writeContent">{{ essay.content }}</textarea>
+                <textarea id="writeContent" @keydown.tab="handleTabKeyDown($event)">{{ essay.content }}</textarea>
             </div>
             <div class="content" id="show">
                 <h1 class="tips">预览效果(<a href="/images" target="_blank">查看全部图片</a>)</h1>

@@ -78,6 +78,19 @@ $(function() {
             clean () {
                 $('#writeContent').val('');
                 $('#showContent').html('');
+            },
+            handleTabKeyDown (e) {
+                let target = e.target;
+                let indent = '    ';
+                let start = target.selectionStart;
+                let end = target.selectionEnd;
+                target.value = target.value.substring(0, start) + indent + target.value.substring(end);
+                setTimeout(function() {
+                    target.selectionStart = start + indent.length;  
+                    target.selectionEnd = end + indent.length;
+                    target.focus();
+                }, 1);
+                e.preventDefault();
             }
         },
         computed: {
