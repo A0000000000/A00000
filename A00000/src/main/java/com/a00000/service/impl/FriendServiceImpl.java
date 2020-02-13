@@ -24,7 +24,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public boolean addNewFriend(Friend friend) {
-        LogUtils.LogInfo("FriendServiceImpl.addNewFriend", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("FriendServiceImpl.addNewFriend", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         friend.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         friend.setCreateTime(new Date());
         try {
@@ -33,7 +33,7 @@ public class FriendServiceImpl implements FriendService {
                 return true;
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return false;
     }

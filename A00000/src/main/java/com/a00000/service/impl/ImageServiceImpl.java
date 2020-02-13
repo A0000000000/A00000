@@ -25,7 +25,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public int saveImages(List<Image> images) {
-        LogUtils.LogInfo("ImageServiceImpl.saveImages", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("ImageServiceImpl.saveImages", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         int count = 0;
         for (Image image : images) {
             if (image != null) {
@@ -40,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
                         count++;
                     }
                 } catch (Exception e) {
-                    LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                    LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
         }
@@ -50,7 +50,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public List<Image> getAllImages() {
-        LogUtils.LogInfo("ImageServiceImpl.getAllImages", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("ImageServiceImpl.getAllImages", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         List<Image> list = null;
         ValueOperations vps = null;
         Map<String, Image> cache = null;
@@ -61,7 +61,7 @@ public class ImageServiceImpl implements ImageService {
                 cache = new HashMap<>();
             }
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             list = imageMapper.selectAllImages();
@@ -74,11 +74,11 @@ public class ImageServiceImpl implements ImageService {
                     }
                     vps.set(Image.class.getName(), cache);
                 } catch (Exception e) {
-                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return list;
     }
@@ -86,7 +86,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public Image getImageById(String id) {
-        LogUtils.LogInfo("ImageServiceImpl.getImageById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("ImageServiceImpl.getImageById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Image image = null;
         ValueOperations vps = null;
         Map<String, Image> cache = null;
@@ -98,7 +98,7 @@ public class ImageServiceImpl implements ImageService {
             }
             image = cache.get(id);
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             if (image == null) {
@@ -109,11 +109,11 @@ public class ImageServiceImpl implements ImageService {
                         vps.set(Image.class.getName(), cache);
                     }
                 } catch (Exception e) {
-                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return image;
     }
@@ -121,7 +121,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public boolean deleteImageById(String id) {
-        LogUtils.LogInfo("ImageServiceImpl.deleteImageById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("ImageServiceImpl.deleteImageById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         try {
             ValueOperations vps = redisTemplate.opsForValue();
             Map<String, Image> cache = (Map<String, Image>) vps.get(Image.class.getName());
@@ -131,7 +131,7 @@ public class ImageServiceImpl implements ImageService {
             cache.remove(id);
             vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             int count = imageMapper.deleteImageById(id);
@@ -139,7 +139,7 @@ public class ImageServiceImpl implements ImageService {
                 return true;
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return false;
     }

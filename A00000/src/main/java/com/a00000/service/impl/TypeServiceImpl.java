@@ -30,12 +30,12 @@ public class TypeServiceImpl implements TypeService {
     @Override
     @Transactional
     public Type getTypeById(String id) {
-        LogUtils.LogInfo("TypeService.getTypeById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("TypeService.getTypeById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Type type = null;
         ValueOperations vps = null;
         Map<String, Type> cache = null;
         try {
-            LogUtils.LogInfo("TypeService.getTypeById.getTypeCache", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogInfo("TypeService.getTypeById.getTypeCache", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
             vps = redisTemplate.opsForValue();
             cache = (Map<String, Type>) vps.get(Type.class.getName());
             if (cache == null) {
@@ -43,7 +43,7 @@ public class TypeServiceImpl implements TypeService {
             }
             type = cache.get(id);
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             if (type == null) {
@@ -53,14 +53,14 @@ public class TypeServiceImpl implements TypeService {
                         cache.put(type.getId(), type);
                         vps.set(Type.class.getName(), cache);
                     } catch (Exception e) {
-                        LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                        LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                     }
                 }
             } else {
-                LogUtils.LogInfo("TypeService.getTypeById.getTypeCache From Redis Success", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                LogUtils.LogInfo("TypeService.getTypeById.getTypeCache From Redis Success", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return type;
     }
@@ -68,7 +68,7 @@ public class TypeServiceImpl implements TypeService {
     @Override
     @Transactional
     public List<Type> getAllType() {
-        LogUtils.LogInfo("TypeService.getAllType", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("TypeService.getAllType", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         List<Type> res = null;
         ValueOperations vps = null;
         Map<String, Type> cache = null;
@@ -79,7 +79,7 @@ public class TypeServiceImpl implements TypeService {
                 cache = new HashMap<>();
             }
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             res = typeMapper.selectAllType();
@@ -90,11 +90,11 @@ public class TypeServiceImpl implements TypeService {
                     }
                     vps.set(Type.class.getName(), cache);
                 } catch (Exception e) {
-                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+                    LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return res;
     }
@@ -102,14 +102,14 @@ public class TypeServiceImpl implements TypeService {
     @Override
     @Transactional
     public boolean addNewType(Type type) {
-        LogUtils.LogInfo("TypeService.addNewType", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("TypeService.addNewType", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         try {
             Type tmp = typeMapper.selectTypeByName(type.getName());
             if (tmp != null || !StringUtils.isEmpty(tmp.getId())) {
                 return false;
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         type.setId(UUID.randomUUID().toString().replaceAll("-", ""));
         try {
@@ -120,7 +120,7 @@ public class TypeServiceImpl implements TypeService {
                 return false;
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return false;
     }
@@ -128,7 +128,7 @@ public class TypeServiceImpl implements TypeService {
     @Override
     @Transactional
     public boolean deleteTypeById(String id) {
-        LogUtils.LogInfo("TypeService.deleteTypeById", Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+        LogUtils.LogInfo("TypeService.deleteTypeById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         try {
             ValueOperations vps = redisTemplate.opsForValue();
             Map<String, Essay> cacheEssay = (Map<String, Essay>) vps.get(Essay.class.getName());
@@ -148,7 +148,7 @@ public class TypeServiceImpl implements TypeService {
             cacheType.remove(id);
             vps.set(Type.class.getName(), cacheType);
         } catch (Exception e) {
-            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
             essayMapper.updateEssayByType(id, "0");
@@ -157,7 +157,7 @@ public class TypeServiceImpl implements TypeService {
                 return true;
             }
         } catch (Exception e) {
-            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[0].getFileName(), Thread.currentThread().getStackTrace()[0].getLineNumber(), new Date());
+            LogUtils.LogError(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return false;
     }
