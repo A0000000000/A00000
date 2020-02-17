@@ -6,21 +6,42 @@
     <title>随笔列表</title>
     <script src="/node_modules/jquery/dist/jquery.js"></script>
     <script src="/node_modules/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">    
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.js" type="text/javascript" charset="UTF-8"></script>
     <script src="/public/js/essaylist.js"></script>
     <link rel="stylesheet" href="/public/css/essaylist.css">
 </head>
 <body>
     <div id="app" class="container">
+        <div class="modal fade" id="DIV" tabindex="-1" role="dialog" aria-labelledby="Token">  
+            <div class="modal-dialog" role="document">  
+                <div class="modal-content">  
+                    <div class="modal-header">  
+                        <h4 class="modal-title">请输入指定信息</h4> 
+                    </div>  
+                    <div class="modal-body">
+                        <div v-if="isAdd"><input type="text" class="form-control" v-model="name" placeholder="请输入标签名"></div>
+                        <input type="text" class="form-control" v-model="key" placeholder="请输入TokenKey">
+                        <input type="password" @keydown.enter="handleDiv($event)" class="form-control" v-model="value" placeholder="请输入TokenValue">
+                    </div>  
+                    <div class="modal-footer">
+                        <button type="button" @click="handleDiv($event)" class="btn btn-primary">确认</button>  
+                    </div> 
+                </div>  
+            </div>  
+        </div>
         <h1>随笔列表</h1>
         <h6><a target="_blank" href="/create">编写一篇新随笔?</a></h6>
         <div id="essay_container">
             {{ each list }}
-            <div id="essay">
+            <div id="essay" @mouseenter="handlerMouseEnter($event, '{{ $value.id }}')" @mouseleave="handlerMouseLeave($event, '{{ $value.id }}')">
                 <a target="_blank" href="/essay?id={{ $value.id }}">{{ $value.title }}<span class="pwd">{{ $value.password === "true" ? "[加密]" : ""}}</span></a><br>
-                <div id="creator">作者: {{ $value.creator }}</div>
-                <div class="date">创建时间: {{ $value.createTime }}</div>
-                <div class="date">最后更新时间: {{ $value.updateTime }}</div>
+                <div class="info" id="info_{{ $value.id }}">
+                    <div id="creator">作者: {{ $value.creator }}</div>
+                    <div class="date">创建时间: {{ $value.createTime }}</div>
+                    <div class="date">最后更新时间: {{ $value.updateTime }}</div>
+                </div>
+                <div class="tag" id="tag_{{ $value.id }}" ></div>
             </div>
             {{ /each }}
             <div class="clean"></div>

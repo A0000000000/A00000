@@ -46,3 +46,18 @@ create table t_comment (
     essayId varchar(255),
     constraint fk_comment_essay foreign key (essayId) references t_essay(id)
 )character set utf8 collate utf8_general_ci;
+
+create table t_tag(
+    id varchar(255) primary key,
+    name varchar(255) not null,
+    createTime datetime default now()
+)character set utf8 collate utf8_general_ci;
+
+create table t_essay_tag (
+    id varchar(255) primary key,
+    essayId varchar(255) not null,
+    tagId varchar(255) not null,
+    createTime datetime default now(),
+    constraint fk_essay_tag_essay foreign key (essayId) references t_essay(id),
+    constraint fk_essay_tag_tag foreign key (tagId) references t_tag(id)
+)character set utf8 collate utf8_general_ci;

@@ -2,6 +2,7 @@ package com.a00000.service.impl;
 
 import com.a00000.bean.Comment;
 import com.a00000.bean.Essay;
+import com.a00000.bean.EssayTag;
 import com.a00000.mapper.CommentMapper;
 import com.a00000.mapper.EssayMapper;
 import com.a00000.service.EssayService;
@@ -47,6 +48,7 @@ public class EssayServiceImpl implements EssayService {
                 vps.set(Essay.class.getName(), cache);
             }
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         return essays;
@@ -68,6 +70,7 @@ public class EssayServiceImpl implements EssayService {
                 }
                 essay = cache.get(id);
             } catch (Exception e) {
+                this.redisTemplate = null;
                 LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
             }
             if (essay == null) {
@@ -78,6 +81,7 @@ public class EssayServiceImpl implements EssayService {
                         vps.set(Essay.class.getName(), cache);
                     }
                 } catch (Exception e) {
+                    this.redisTemplate = null;
                     LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
@@ -108,7 +112,10 @@ public class EssayServiceImpl implements EssayService {
                 cacheEssay = new HashMap<>();
             }
             vps.set(Essay.class.getName(), cacheEssay);
+            Map<String, EssayTag> cacheEssayTag = new HashMap<>();
+            vps.set(EssayTag.class.getName(), cacheEssayTag);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
@@ -168,6 +175,7 @@ public class EssayServiceImpl implements EssayService {
             }
             vps.set(Essay.class.getName(), cache);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         target.setUpdateTime(new Date());

@@ -3,6 +3,37 @@ function GetQueryString(name) {
     let r = window.location.search.substr(1).match(reg);
     if(r!=null)return  unescape(r[2]); return null;
 }
+
+let isValid = function(str) {
+    if (str === undefined || str === null || str === "") {
+       return false;
+    }
+    return true;
+}
+
+function deleteTag (id) {
+    window.vm.tagId = id;
+    window.vm.isAdd = false;
+    $('#DIV').modal('toggle');
+}
+
+function addTag (id) {
+    window.vm.essayId = id;
+    window.vm.isAdd = true;
+    $('#DIV').modal('toggle');
+}
+
+function SetData(id, sel, jsonData) {
+    let html = '';
+    html += '<ul>';
+    for (let i = 0; i < jsonData.length; i++) {
+        let item = jsonData[i];
+        html += `<li>${ item.name } <button class="btn btn-outline-danger btn-sm" onclick="deleteTag('${ item.id }')">删除</button></li>`;
+    }
+    html += '</ul>';
+    html += `<button class="btn btn-outline-primary" onclick="addTag('${id}')">添加标签</button>`;
+    sel.html(html);
+}
 $(function() {
     window.vm = new Vue({
         el: '#app',
@@ -11,10 +42,112 @@ $(function() {
             currentpage: 1,
             next_page_class: { 'nav-link': true, 'disabled': false },
             pages: 0,
-            size: 10
+            size: 10,
+            key: '',
+            value: '',
+            name: '',
+            isAdd: false,
+            tagId: '',
+            essayId: ''
         },
         methods: {
-            
+            handlerMouseEnter (e, id) {
+                $('#info_' + id).slideUp(500);
+                $('#tag_' + id).slideDown(500);
+                $.ajax({
+                    url: 'getTagsByEssayId',
+                    data: {essayId: id},
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function(data, status, obj) {
+                        if (data.status && data.status === 'failed') {
+                            alert(data.message);
+                            return;
+                        }
+                        SetData(id, $('#tag_' + id), data);
+                    },
+                    error: function(data, status, obj) {
+                        console.dir(data);
+                    }
+                });
+            },
+            handlerMouseLeave (e, id) {
+                $('#tag_' + id).slideUp(500);
+                $('#info_' + id).slideDown(500);
+                SetData(id, $('#tag_' + id), []);
+            },
+            handleDiv (e) {
+                $('#DIV').modal('toggle');
+                let params = {};
+                if (this.isAdd) {
+                    params['essayId'] = this.essayId;
+                    params['key'] = this.key.trim();
+                    params['value'] = this.value.trim();
+                    params['tagName'] = this.name.trim();
+                    if (!isValid(params.essayId)) {
+                        alert('页面出错, 请刷新重试!');
+                        return;
+                    }
+                    if (!(isValid(params.key) && isValid(params.value))) {
+                        alert('令牌不能为空!');
+                        return;
+                    }
+                    if (!isValid(params.tagName)) {
+                        alert('标签名不能为空!');
+                        return;
+                    }
+                    $.ajax({
+                        url: '/addTag',
+                        type: 'POST',
+                        data: params,
+                        dataType: 'JSON',
+                        success: function(data, status, obj) {
+                            if (data.status === 'failed') {
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                                window.location.reload();
+                            }
+                        },
+                        error: function(data, status, obj) {
+                            console.dir(data);
+                        }
+                    });
+                } else {
+                    params['id'] = this.tagId;
+                    params['key'] = this.key.trim();
+                    params['value'] = this.value.trim();
+                    if (!isValid(params.id)) {
+                        alert('页面出错, 请刷新重试!');
+                        return;
+                    }
+                    if (!(isValid(params.key) && isValid(params.value))) {
+                        alert('令牌不能为空!');
+                        return;
+                    }
+                    $.ajax({
+                        url: '/deleteTag',
+                        type: 'POST',
+                        data: params,
+                        dataType: 'JSON',
+                        success: function(data, status, obj) {
+                            if (data.status === 'failed') {
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                                window.location.reload();
+                            }
+                        },
+                        error: function(data, status, obj) {
+                            console.dir(data);
+                        }
+                    });
+                }
+                this.key = '';
+                this.value = '';
+                this.tagId = '';
+                this.essayId = '';
+            }
         }
     });
     let page = Number(GetQueryString('page'));
@@ -50,7 +183,7 @@ $(function() {
             }
         },
         error: function(data, status, obj) {
-
+            console.dir(data);
         }
     });
 });

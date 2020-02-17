@@ -2,8 +2,8 @@ package com.a00000.handler;
 
 import com.a00000.bean.Comment;
 import com.a00000.service.CommentService;
+import com.a00000.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,14 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/***
- * 评论相关的控制器
- */
 @Controller
 @RequestMapping("/")
 public class CommentHandler {
@@ -26,17 +20,9 @@ public class CommentHandler {
     @Autowired
     private CommentService commentService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    /**
-     * 处理获取某篇随笔的评论
-     * @param essayId 随笔id
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("getCommentsByEssayId")
     public @ResponseBody List<Map<String, Object>> getCommentsByEssayId(@RequestParam("essayId") String essayId) throws Exception {
+        LogUtils.LogInfo("CommentHandler.getCommentsByEssayId", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         List<Map<String, Object>> list = new ArrayList<>();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<Comment> comments = commentService.getCommentsByEssayId(essayId);
@@ -52,14 +38,9 @@ public class CommentHandler {
         return list;
     }
 
-    /**
-     * 向数据库增加一条评论
-     * @param comment 评论对象
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("addNewComment")
     public @ResponseBody Map<String, Object> addNewComment(Comment comment) throws Exception {
+        LogUtils.LogInfo("CommentHandler.addNewComment", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         if (comment == null || StringUtils.isEmpty(comment.getEssayId())) {
             map.put("status", "failed");
@@ -77,14 +58,9 @@ public class CommentHandler {
         return map;
     }
 
-    /**
-     * 根据id删除一条评论
-     * @param id 评论id
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("deleteCommentById")
     public @ResponseBody Map<String, Object> deleteCommentById(@RequestParam("id") String id) throws Exception {
+        LogUtils.LogInfo("CommentHandler.deleteCommentById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         boolean res = commentService.deleteCommentById(id);
         if (res) {

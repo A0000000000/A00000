@@ -1,10 +1,8 @@
 package com.a00000.utils;
 
+import java.util.Date;
 import java.util.ResourceBundle;
 
-/**
- * 用于获取服务器key和value的值
- */
 public class TokenUtils {
 
     private static ResourceBundle bundle = null;
@@ -13,23 +11,18 @@ public class TokenUtils {
         bundle = ResourceBundle.getBundle("token");
     }
 
-    /**
-     * 获取key
-     * @return key的值
-     */
     public static String getKey() {
+        LogUtils.LogInfo("TokenUtils.getKey", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         return bundle.getString("key");
     }
 
-    /**
-     * 获取value
-     * @return value的值
-     */
     public static String getValue() {
+        LogUtils.LogInfo("TokenUtils.getValue", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         return bundle.getString("value");
     }
 
     public static String getTOKEN() {
+        LogUtils.LogInfo("TokenUtils.getTOKEN", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         return bundle.getString("TOKEN");
     }
 }

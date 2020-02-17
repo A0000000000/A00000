@@ -43,6 +43,7 @@ public class TypeServiceImpl implements TypeService {
             }
             type = cache.get(id);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
@@ -53,6 +54,7 @@ public class TypeServiceImpl implements TypeService {
                         cache.put(type.getId(), type);
                         vps.set(Type.class.getName(), cache);
                     } catch (Exception e) {
+                        this.redisTemplate = null;
                         LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                     }
                 }
@@ -79,6 +81,7 @@ public class TypeServiceImpl implements TypeService {
                 cache = new HashMap<>();
             }
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
@@ -90,6 +93,7 @@ public class TypeServiceImpl implements TypeService {
                     }
                     vps.set(Type.class.getName(), cache);
                 } catch (Exception e) {
+                    this.redisTemplate = null;
                     LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
@@ -148,6 +152,7 @@ public class TypeServiceImpl implements TypeService {
             cacheType.remove(id);
             vps.set(Type.class.getName(), cacheType);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {

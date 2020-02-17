@@ -61,6 +61,7 @@ public class ImageServiceImpl implements ImageService {
                 cache = new HashMap<>();
             }
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
@@ -74,6 +75,7 @@ public class ImageServiceImpl implements ImageService {
                     }
                     vps.set(Image.class.getName(), cache);
                 } catch (Exception e) {
+                    this.redisTemplate = null;
                     LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
@@ -98,6 +100,7 @@ public class ImageServiceImpl implements ImageService {
             }
             image = cache.get(id);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {
@@ -109,6 +112,7 @@ public class ImageServiceImpl implements ImageService {
                         vps.set(Image.class.getName(), cache);
                     }
                 } catch (Exception e) {
+                    this.redisTemplate = null;
                     LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
                 }
             }
@@ -131,6 +135,7 @@ public class ImageServiceImpl implements ImageService {
             cache.remove(id);
             vps.set(Image.class.getName(), cache);
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         try {

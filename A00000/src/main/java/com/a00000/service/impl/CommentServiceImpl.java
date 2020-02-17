@@ -32,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
             vps = redisTemplate.opsForValue();
             cache = (Map<String, List<Comment>>) vps.get(Comment.class.getName());
         } catch (Exception e) {
+            this.redisTemplate = null;
             LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         }
         if (cache == null) {
@@ -46,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
             try {
                 vps.set(Comment.class.getName(), cache);
             } catch (Exception e) {
+                this.redisTemplate = null;
                 LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
             }
         } catch (Exception e) {
@@ -81,6 +83,7 @@ public class CommentServiceImpl implements CommentService {
                 ValueOperations vps = redisTemplate.opsForValue();
                 vps.set(Comment.class.getName(), cache);
             } catch (Exception e) {
+                this.redisTemplate = null;
                 LogUtils.LogWarning(e, Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
             }
             int count = commentMapper.deleteCommentById(id);

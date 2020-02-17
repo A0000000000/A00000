@@ -1,5 +1,6 @@
 package com.a00000.interceptor;
 
+import com.a00000.utils.LogUtils;
 import com.a00000.utils.TokenUtils;
 import com.a00000.utils.URLUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -7,14 +8,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
-/**
- * 用于校验URL所携带的key和value是否合法的拦截器
- */
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        LogUtils.LogInfo("TokenInterceptor.preHandle", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         String url = request.getRequestURI();
         if (URLUtils.isInterceptor(url)) {
             String key = request.getParameter("key");

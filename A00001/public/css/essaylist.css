@@ -69,3 +69,11 @@ body {
     font-style: italic;
     font-size: x-large;
 }
+
+.tag {
+    display: none;
+}
+
+li {
+    list-style: none;
+}

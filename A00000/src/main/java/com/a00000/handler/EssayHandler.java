@@ -2,6 +2,7 @@ package com.a00000.handler;
 
 import com.a00000.bean.Essay;
 import com.a00000.service.EssayService;
+import com.a00000.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -10,30 +11,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * 随笔的控制器, 用于处理与随笔相关的请求
- */
 @Controller
 @RequestMapping("/")
 public class EssayHandler {
 
-    // 注入Service对象
     @Autowired
     private EssayService essayService;
 
-    /**
-     * 处理获取某页随笔的方法
-     * @param page 第page页
-     * @return 返回JSON格式的数据
-     * @throws Exception 类型转换出错等异常
-     */
     @RequestMapping("getAllEssayTitle")
     public @ResponseBody List<Map<String, Object>> getAllEssayTitle(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size) throws Exception {
+        LogUtils.LogInfo("EssayHandler.getAllEssayTitle", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         if (page == null || page <= 0) {
             page = 1;
         }
@@ -57,14 +46,9 @@ public class EssayHandler {
         return res;
     }
 
-    /**
-     * 判断一篇随笔是否具有密码保护
-     * @param id 随笔id
-     * @return JSON格式的数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("isHavePassword")
     public @ResponseBody Map<String, Object> isHavePassword(@RequestParam("id") String id) throws Exception {
+        LogUtils.LogInfo("EssayHandler.isHavePassword", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         Essay essay = essayService.getEssayById(id);
         if (essay == null) {
@@ -81,15 +65,9 @@ public class EssayHandler {
         return map;
     }
 
-    /**
-     * 根据id查询一篇随笔
-     * @param id 随笔id
-     * @param password 随笔密码
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("getEssayById")
     public @ResponseBody Map<String, Object> getEssayById(@RequestParam("id") String id, @RequestParam(value = "password", required = false) String password) throws Exception {
+        LogUtils.LogInfo("EssayHandler.getEssayById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         Essay essay = essayService.getEssayById(id);
         if (essay == null) {
@@ -115,14 +93,9 @@ public class EssayHandler {
         return map;
     }
 
-    /**
-     * 根据id删除一篇随笔
-     * @param id 随笔id
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("deleteEssayById")
     public @ResponseBody Map<String, Object> deleteEssayById(@RequestParam("id") String id) throws Exception {
+        LogUtils.LogInfo("EssayHandler.deleteEssayById", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         boolean res = essayService.deleteEssayById(id);
         if (res) {
@@ -135,14 +108,9 @@ public class EssayHandler {
         return map;
     }
 
-    /**
-     * 向数据库中增加一条随笔
-     * @param essay 随笔对象
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("addNewEssay")
     public @ResponseBody Map<String, Object> addNewEssay(Essay essay) throws Exception {
+        LogUtils.LogInfo("EssayHandler.addNewEssay", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         boolean res = essayService.addNewEssay(essay);
         if (res) {
@@ -155,14 +123,9 @@ public class EssayHandler {
         return map;
     }
 
-    /**
-     * 向数据库更新一条随笔
-     * @param essay 随笔对象
-     * @return JSON格式数据
-     * @throws Exception 控制器可能出现的异常
-     */
     @RequestMapping("updateEssay")
     public @ResponseBody Map<String, Object> updateEssay(Essay essay) throws Exception {
+        LogUtils.LogInfo("EssayHandler.updateEssay", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         Map<String, Object> map = new HashMap<>();
         boolean res = essayService.updateEssay(essay);
         if (res) {
@@ -175,14 +138,9 @@ public class EssayHandler {
         return map;
     }
 
-    /**
-     * 获取随笔的页数
-     * @param size 每页的数量
-     * @return JSON格式数据
-     * @throws Exception SQL异常
-     */
     @RequestMapping("getPagesCount")
     public @ResponseBody Map<String, Object> getPagesCount(@RequestParam(value = "size", required = false) Integer size) throws Exception {
+        LogUtils.LogInfo("EssayHandler.getPagesCount", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         if (size == null || size <= 0) {
             size = 10;
         }
@@ -192,4 +150,5 @@ public class EssayHandler {
         map.put("pages", pages);
         return map;
     }
+
 }

@@ -1,16 +1,19 @@
 package com.a00000.interceptor;
 
+import com.a00000.utils.LogUtils;
 import com.a00000.utils.TokenUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 public class PermissionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        LogUtils.LogInfo("PermissionInterceptor.preHandle", Thread.currentThread().getStackTrace()[1].getFileName(), Thread.currentThread().getStackTrace()[1].getLineNumber(), new Date());
         try {
             String token = request.getParameter("TOKEN");
             if (TokenUtils.getTOKEN().equals(token)) {

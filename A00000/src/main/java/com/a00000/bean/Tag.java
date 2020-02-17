@@ -1,12 +1,13 @@
 package com.a00000.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class Type implements Serializable {
+public class Tag implements Serializable {
 
     private String id;
     private String name;
-    private String message;
+    private Date createTime;
 
     public String getId() {
         return id;
@@ -24,11 +25,12 @@ public class Type implements Serializable {
         this.name = name;
     }
 
-    public String getMessage() {
-        return message;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
+
 }

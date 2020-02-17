@@ -48,6 +48,12 @@ let ImageModel = mongoose.model('Image', {
     path: String,
     updateTime: String
 });
+let TagModel = mongoose.model('Tag', {
+    id: String,
+    essayId: String,
+    name: String,
+    createTime: String
+});
 
 let RunInfo = {
     getRunDate: null,
@@ -75,6 +81,12 @@ let ImageUtils = {
     getImageById: null,
     deleteImage: null,
     saveImage: null
+}
+let TagUtils = {
+    getTagsByEssayId: null,
+    addTags: null,
+    deleteTagsByEssayId: null,
+    deleteTagById: null
 }
 
 conn.on('connected', function() {
@@ -208,6 +220,37 @@ conn.on('connected', function() {
             callback('failed', null);
         }
     }
+    TagUtils.getTagsByEssayId = function(params, callback) {
+        if (!params.essayId) {
+            callback('参数无效!', null);
+            return;
+        }
+        TagModel.find({essayId: params.essayId}, callback);
+    }
+    TagUtils.deleteTagsByEssayId = function(params, callback) {
+        if (!params.essayId) {
+            callback('参数无效!', null);
+            return;
+        }
+        TagModel.deleteMany(params, callback);
+    }
+    TagUtils.addTags = function(params, callback) {
+        if (!params instanceof Array) {
+            callback('参数错误!', null);
+            return;
+        }
+        params.forEach(element => {
+            let tmp = new TagModel(element);
+            tmp.save(callback);
+        });
+    }
+    TagUtils.deleteTagById = function(params, callback) {
+        if (!params.id) {
+            callback('参数无效!', null);
+            return;
+        }
+        TagModel.deleteOne({id: params.id}, callback);
+    }
 });
 
 
@@ -262,13 +305,27 @@ conn.on('error', function(err) {
         ImageUtils.saveImage = function(params, callback) {
             callback('Cannt connect MongoDB');
         }
+        TagUtils.getTagsByEssayId = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TagUtils.deleteTagsByEssayId = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TagUtils.addTags = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
+        TagUtils.deleteTagById = function(params, callback) {
+            callback('Cannt connect MongoDB');
+        }
     }
 });
+
 
 module.exports = {
     RunInfo: RunInfo,
     EssayUtils: EssayUtils,
     TypeUtils: TypeUtils,
     CommentUtils: CommentUtils,
-    ImageUtils: ImageUtils
+    ImageUtils: ImageUtils,
+    TagUtils: TagUtils
 }
