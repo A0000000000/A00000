@@ -25,12 +25,12 @@ function addTag (id) {
 
 function SetData(id, sel, jsonData) {
     let html = '';
-    html += '<ul>';
+    html += '<div>';
     for (let i = 0; i < jsonData.length; i++) {
         let item = jsonData[i];
-        html += `<li>${ item.name } <button class="btn btn-outline-danger btn-sm" onclick="deleteTag('${ item.id }')">删除</button></li>`;
+        html += `<div><button type="button" class="btn btn-outline-danger" onclick="deleteTag('${ item.id }')">${ item.name } &times;</button></div>`;
     }
-    html += '</ul>';
+    html += '</div>';
     html += `<button class="btn btn-outline-primary" onclick="addTag('${id}')">添加标签</button>`;
     sel.html(html);
 }
