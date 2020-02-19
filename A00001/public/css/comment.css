@@ -1,7 +1,8 @@
 body {
-    background-image: url(/public/images/bh3.jpg);
+    background-image: url(/public/images/sz.jpg);
     background-repeat:no-repeat;
     background-attachment:fixed;
+    background-size: cover;
 }
 
 #main {

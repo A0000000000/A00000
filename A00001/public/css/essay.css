@@ -1,7 +1,8 @@
 body {
-    background-image: url(/public/images/tong.jpg);
+    background-image: url(/public/images/blhx.jpg);
     background-repeat:no-repeat;
     background-attachment:fixed;
+    background-size: cover;
 }
 
 #app {

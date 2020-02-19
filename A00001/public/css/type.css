@@ -2,6 +2,7 @@ body {
     background-image: url(/public/images/tong.jpg);
     background-repeat:no-repeat;
     background-attachment:fixed;
+    background-size: cover;
 }
 #main {
     margin-top: 50px;
